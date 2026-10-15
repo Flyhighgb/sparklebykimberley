@@ -58,6 +58,7 @@ content:
         fields:
           - { name: item, label: Item, type: string, required: true }
           - { name: product, label: "Shop product to link (optional: the product's file name without .json)", type: string }
+          - { name: link, label: "Affiliate link (optional: e.g. your Amazon Associates link; shown as 'buy it here (ad)')", type: string }
       - name: steps
         label: Steps
         type: object

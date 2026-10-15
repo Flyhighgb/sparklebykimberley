@@ -109,9 +109,17 @@ const breadcrumbs = {
           <ul class="materials">
             {d.materials.map((m) => {
               const p = m.product ? productMap.get(m.product) : undefined;
-              return <li><span class="tick" aria-hidden="true">✦</span> {m.item}{p && <> · <a href={`/shop/${p.id}`}>get it in the shop</a></>}</li>;
+              return (
+                <li>
+                  <span class="tick" aria-hidden="true">✦</span> {m.item}
+                  {p ? <> · <a href={`/shop/${p.id}`}>get it in the shop</a></> : m.link && <> · <a href={m.link} target="_blank" rel="sponsored noopener">buy it here</a> <small>(ad)</small></>}
+                </li>
+              );
             })}
           </ul>
+          {d.materials.some((m) => m.link && !m.product) && (
+            <p class="small">Links marked (ad) are affiliate links: we may earn a small commission at no extra cost to you. <a href="/affiliate-disclosure">Find out more</a>.</p>
+          )}
         </section>
 
         {d.printable?.file && (
