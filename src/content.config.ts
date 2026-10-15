@@ -1,4 +1,5 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 export const AUDIENCES = ['adults', 'kids', 'family'] as const;
@@ -45,7 +46,7 @@ export const FULFILMENT = ['cj', 'prodigi', 'digital', 'manual'] as const;
 
 // The CMS can save empty optional fields as null or "", so be forgiving with those.
 const optStr = z.string().nullish().transform((v) => v || '');
-const optList = <T extends z.ZodTypeAny>(item: T) => z.array(item).nullish().transform((v) => v ?? []);
+const optList = <T extends z.ZodType>(item: T) => z.array(item).nullish().transform((v) => v ?? []);
 
 const tutorials = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/tutorials' }),
@@ -102,7 +103,7 @@ const products = defineCollection({
         url: optStr,
         warehouse: optStr,
         assetUrl: optStr,
-        attributes: z.record(z.string()).nullish().transform((v) => v ?? {}),
+        attributes: z.record(z.string(), z.string()).nullish().transform((v) => v ?? {}),
         downloadKey: optStr,
       })
       .nullish()
