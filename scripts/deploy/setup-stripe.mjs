@@ -3,6 +3,12 @@
 import fs from 'node:fs';
 import { API_URL, mask, need, wrangler } from './lib.mjs';
 
+const settings = JSON.parse(fs.readFileSync('src/data/settings.json', 'utf8'));
+if (settings.etsyShop) {
+  console.log('Selling through Etsy, so Stripe set-up is skipped.');
+  process.exit(0);
+}
+
 const key = need('STRIPE_SECRET_KEY');
 const out = process.argv[2];
 let workerHasWebhookSecret = false;
@@ -11,7 +17,6 @@ try {
 } catch {
   /* Worker not deployed yet */
 }
-const settings = JSON.parse(fs.readFileSync('src/data/settings.json', 'utf8'));
 const flatPence = Math.round(Number(settings.deliveryFlatRate) * 100);
 
 async function stripe(method, path, params) {
