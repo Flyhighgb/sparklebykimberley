@@ -1,0 +1,161 @@
+---
+import Base from '../layouts/Base.astro';
+import Wave from '../components/Wave.astro';
+import TutorialCard from '../components/TutorialCard.astro';
+import ProductCard from '../components/ProductCard.astro';
+import Newsletter from '../components/Newsletter.astro';
+import { getTutorials, getProducts, settings } from '../lib/content';
+
+const tutorials = await getTutorials();
+const latest = tutorials.slice(0, 6);
+const seasonal = settings.seasonal.tutorials
+  .map((slug) => tutorials.find((t) => t.id === slug))
+  .filter((t): t is NonNullable<typeof t> => Boolean(t));
+const favourites = (await getProducts()).filter((p) => p.data.featured).slice(0, 4);
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: settings.siteName,
+  url: 'https://sparklebykimberley.co.uk',
+  logo: 'https://sparklebykimberley.co.uk/favicon.svg',
+  sameAs: settings.social.map((s) => s.url),
+};
+---
+<Base title="Sparkle by Kimberley" description="Free step-by-step paper craft tutorials for grown-ups and little hands, plus a cheerful shop of craft kits, card and printables. Free UK delivery over £30.">
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(orgSchema)} />
+
+  <section class="hero confetti">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <span class="script hello">Hello, crafty friend!</span>
+        <h1>Crafting colourful moments that <span class="hl">sparkle</span> all year round</h1>
+        <p class="lead">Free, friendly paper craft tutorials for grown-ups and little hands, and a little shop full of the bits you need.</p>
+        <div class="cta">
+          <a class="btn sparkle-hover" href="/tutorials">Explore Tutorials</a>
+          <a class="btn btn--white sparkle-hover" href="/shop">Visit the Shop</a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <img src="/images/site/hero.jpg" alt="" width="900" height="760" fetchpriority="high" />
+        <span class="spark s1">✦</span><span class="spark s2">★</span><span class="spark s3">✦</span>
+      </div>
+    </div>
+  </section>
+
+  <Wave from="var(--blush)" to="var(--white)" />
+  <section class="section section--white">
+    <div class="container tiles">
+      <a class="tile tile--adults sparkle-hover" href="/tutorials?audience=adults">
+        <img src="/images/site/tile-adults.jpg" alt="" width="800" height="600" loading="lazy" />
+        <span class="tile-text"><span class="script">for you</span><strong>Crafts for Grown-Ups</strong><span>Quilling, origami, pop-up cards and more. A little bit of calm, just for you.</span></span>
+      </a>
+      <a class="tile tile--kids sparkle-hover" href="/kids-corner">
+        <img src="/images/site/tile-kids.jpg" alt="" width="800" height="600" loading="lazy" />
+        <span class="tile-text"><span class="script">for them</span><strong>Crafts for Little Hands</strong><span>Easy, mess-friendly makes with big results and free printables.</span></span>
+      </a>
+    </div>
+  </section>
+  <Wave from="var(--white)" to="var(--blush)" flip />
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Fresh from the craft table</span>
+        <h2>Latest tutorials</h2>
+      </div>
+      <div class="grid">{latest.map((t) => <TutorialCard tutorial={t} />)}</div>
+      <p class="center"><a class="btn sparkle-hover" href="/tutorials">See all tutorials</a></p>
+    </div>
+  </section>
+
+  {seasonal.length > 0 && (
+    <section class="section seasonal">
+      <div class="container">
+        <div class="seasonal-box">
+          <div class="section-head">
+            <span class="eyebrow">Seasonal spotlight</span>
+            <h2>{settings.seasonal.title}</h2>
+            <p>{settings.seasonal.text}</p>
+          </div>
+          <div class="grid">{seasonal.map((t) => <TutorialCard tutorial={t} />)}</div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <Wave from="var(--blush)" to="var(--white)" />
+  <section class="section section--white">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Our favourite bits</span>
+        <h2>Shop favourites</h2>
+      </div>
+      <div class="grid">{favourites.map((p) => <ProductCard product={p} />)}</div>
+      <p class="center"><a class="btn sparkle-hover" href="/shop">Visit the shop</a></p>
+    </div>
+  </section>
+  <Wave from="var(--white)" to="var(--blush)" flip />
+
+  <section class="section">
+    <div class="container hello-box">
+      <img src="/images/site/kimberley.jpg" alt="Kimberley smiling at her craft table surrounded by colourful paper" width="600" height="600" loading="lazy" />
+      <div>
+        <span class="script eyebrow">Hello, I'm Kimberley!</span>
+        <h2>Welcome to my happy place</h2>
+        <p>I've been cutting, folding and gluing paper for as long as I can remember. Sparkle is where I share my favourite makes, with simple steps and no fancy jargon.</p>
+        <p>Whether you're after ten calm minutes with a cup of tea or a rainy-day rescue for the kids, there's something here for you. Don't worry if it's not perfect, that's half the fun!</p>
+        <a class="btn btn--white sparkle-hover" href="/about">Read my story</a>
+      </div>
+    </div>
+  </section>
+
+  <Newsletter />
+
+  <section class="section social-strip">
+    <div class="container center">
+      <h2>Come and say hello</h2>
+      <p>Share your makes with <strong>#SparkleByKimberley</strong>. I love seeing them!</p>
+      <ul class="social">
+        {settings.social.map((s) => <li><a class="btn btn--white btn--small sparkle-hover" href={s.url} rel="noopener me">{s.name}</a></li>)}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding: clamp(2rem, 6vw, 4.5rem) 0 clamp(2rem, 5vw, 3.5rem); }
+  .hero-inner { display: grid; gap: 2rem; align-items: center; grid-template-columns: 1.1fr 1fr; }
+  @media (max-width: 860px) { .hero-inner { grid-template-columns: 1fr; } }
+  .hello { color: var(--pink-ink); font-size: 1.5rem; }
+  .hl { background: linear-gradient(transparent 60%, var(--yellow) 60%); padding: 0 .1em; }
+  .lead { font-size: 1.2rem; max-width: 34ch; }
+  .cta { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .hero-art { position: relative; }
+  .hero-art img { border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%; border: 4px solid var(--charcoal); box-shadow: 10px 10px 0 var(--turquoise); }
+  .spark { position: absolute; font-size: 2rem; animation: twinkle 2.4s ease-in-out infinite; }
+  .s1 { top: -6px; left: 8%; color: var(--pink); }
+  .s2 { top: 12%; right: -4px; color: var(--yellow); font-size: 2.4rem; animation-delay: .8s; -webkit-text-stroke: 1px var(--charcoal); }
+  .s3 { bottom: 4%; left: -6px; color: var(--blue); animation-delay: 1.6s; }
+  @keyframes twinkle { 0%, 100% { transform: scale(1) rotate(0); opacity: 1; } 50% { transform: scale(.7) rotate(20deg); opacity: .6; } }
+
+  .tiles { display: grid; gap: 1.5rem; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 720px) { .tiles { grid-template-columns: 1fr; } }
+  .tile { position: relative; display: block; border-radius: var(--radius); overflow: hidden; border: 3px solid var(--charcoal); text-decoration: none; color: var(--charcoal); background: var(--white); transition: transform .2s ease; }
+  .tile:hover { transform: rotate(-1deg) translateY(-4px); color: var(--charcoal); }
+  .tile img { aspect-ratio: 16/10; object-fit: cover; width: 100%; }
+  .tile-text { display: block; padding: 1.1rem 1.3rem 1.4rem; }
+  .tile-text .script { display: block; font-size: 1.2rem; color: var(--pink-ink); }
+  .tile-text strong { display: block; font-size: 1.6rem; font-weight: 800; margin-bottom: .2rem; }
+  .tile--adults { box-shadow: 8px 8px 0 var(--blue); }
+  .tile--kids { box-shadow: 8px 8px 0 var(--yellow); }
+
+  .center { text-align: center; margin-top: 2rem; }
+  .seasonal { padding-top: 0; }
+  .seasonal-box { background: var(--white); border: 3px dashed var(--pink); border-radius: var(--radius); padding: clamp(1.4rem, 4vw, 2.5rem); }
+  .hello-box { display: grid; grid-template-columns: 340px 1fr; gap: 2.5rem; align-items: center; }
+  @media (max-width: 760px) { .hello-box { grid-template-columns: 1fr; } .hello-box img { max-width: 260px; margin: 0 auto; } }
+  .hello-box img { border-radius: 50%; border: 4px solid var(--charcoal); box-shadow: 8px 8px 0 var(--pink); }
+  .hello-box .eyebrow { color: var(--pink-ink); font-size: 1.4rem; }
+  .social { list-style: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .7rem; }
+  .social-strip { padding-top: 0; }
+</style>

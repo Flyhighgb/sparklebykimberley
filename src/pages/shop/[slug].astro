@@ -1,0 +1,161 @@
+---
+import { marked } from 'marked';
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import TutorialCard from '../../components/TutorialCard.astro';
+import { getProducts, getTutorials, gbp, slugify, settings } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const products = await getProducts();
+  return products.map((p) => ({ params: { slug: p.id }, props: { product: p } }));
+}
+const { product } = Astro.props;
+const d = product.data;
+const all = await getProducts();
+const together = d.boughtTogether.map((s) => all.find((p) => p.id === s)).filter((p): p is NonNullable<typeof p> => Boolean(p));
+const usedIn = (await getTutorials()).filter(
+  (t) => t.data.shopProducts.includes(product.id) || t.data.materials.some((m) => m.product === product.id),
+);
+const descriptionHtml = await marked.parse(d.description);
+const variants = d.variants.map((v) => ({ name: v.name, price: v.price ?? d.price }));
+const site = 'https://sparklebykimberley.co.uk';
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: d.title,
+  description: d.summary,
+  image: d.images.map((i) => site + i.src),
+  sku: product.id,
+  brand: { '@type': 'Brand', name: 'Sparkle by Kimberley' },
+  offers: {
+    '@type': 'Offer',
+    url: `${site}/shop/${product.id}`,
+    priceCurrency: 'GBP',
+    price: d.price.toFixed(2),
+    availability: 'https://schema.org/InStock',
+    shippingDetails: {
+      '@type': 'OfferShippingDetails',
+      shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'GB' },
+    },
+  },
+};
+---
+<Base title={d.title} description={d.summary} image={d.images[0].src} imageAlt={d.images[0].alt} type="product">
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(productSchema)} />
+  <div class="container product">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/shop">Shop</a> / <a href={`/shop/category/${slugify(d.category)}`}>{d.category}</a></nav>
+    <div class="layout">
+      <div class="gallery">
+        <img class="main-img" src={d.images[0].src} alt={d.images[0].alt} width="1000" height="750" data-main />
+        {d.images.length > 1 && (
+          <ul class="thumbs" aria-label="More photos">
+            {d.images.map((img, i) => (
+              <li><button type="button" data-thumb={img.src} data-alt={img.alt} aria-label={`Show photo ${i + 1}: ${img.alt}`}><img src={img.src} alt="" width="160" height="120" loading="lazy" /></button></li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <div class="info">
+        <span class="pill pill--pink">{d.category}</span>
+        <h1>{d.title}</h1>
+        <p class="price big" data-price>{gbp(d.price)} <small>{settings.priceNote}</small></p>
+        <p class="summary">{d.summary}</p>
+        <form class="buy" data-buy data-id={product.id}>
+          {variants.length > 0 && (
+            <div>
+              <label for="variant">Option</label>
+              <select id="variant" name="variant" data-variants={JSON.stringify(variants)}>
+                {variants.map((v) => <option value={v.name}>{v.name} ({gbp(v.price)})</option>)}
+              </select>
+            </div>
+          )}
+          <div class="qty">
+            <label for="qty">Quantity</label>
+            <input id="qty" name="qty" type="number" min="1" max="20" value="1" inputmode="numeric" />
+          </div>
+          <button class="btn sparkle-hover add" type="submit">Add to basket</button>
+          <p class="added" role="status" aria-live="polite"></p>
+        </form>
+        <ul class="facts">
+          <li><strong>{d.fulfilment === 'digital' ? 'Delivery:' : 'Estimated delivery:'}</strong> {d.deliveryEstimate}{d.fulfilment !== 'digital' && ' (UK only)'}</li>
+          {d.fulfilment !== 'digital' && <li><strong>Postage:</strong> £{settings.deliveryFlatRate.toFixed(2)}, or free on orders over £{settings.freeDeliveryThreshold}</li>}
+          {d.fulfilment === 'digital' && <li><strong>Format:</strong> PDF download link emailed after payment (valid 7 days)</li>}
+          {d.ageSuitability && <li><strong>Age suitability:</strong> {d.ageSuitability}</li>}
+          <li><a href="/returns">14-day returns</a> on physical items</li>
+        </ul>
+        {d.childrensItem && (
+          <div class="notice notice--safety safety">
+            <strong>Safety information</strong>
+            <p>{d.safetyNote || 'This product is UKCA/CE marked. Adult supervision required.'}</p>
+          </div>
+        )}
+        {!d.childrensItem && d.safetyNote && <p class="small"><strong>Please note:</strong> {d.safetyNote}</p>}
+      </div>
+    </div>
+
+    <section class="desc prose" aria-labelledby="about-product">
+      <h2 id="about-product">About this product</h2>
+      <Fragment set:html={descriptionHtml} />
+    </section>
+
+    {usedIn.length > 0 && (
+      <section class="related" aria-labelledby="used-in">
+        <h2 id="used-in">Used in these tutorials</h2>
+        <div class="grid">{usedIn.map((t) => <TutorialCard tutorial={t} />)}</div>
+      </section>
+    )}
+    {together.length > 0 && (
+      <section class="related" aria-labelledby="together">
+        <h2 id="together">Frequently bought together</h2>
+        <div class="grid">{together.map((p) => <ProductCard product={p} />)}</div>
+      </section>
+    )}
+  </div>
+</Base>
+
+<script>
+  import { addToCart } from '../../scripts/cart';
+  const fmt = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
+  const main = document.querySelector<HTMLImageElement>('[data-main]');
+  document.querySelectorAll<HTMLButtonElement>('[data-thumb]').forEach((b) =>
+    b.addEventListener('click', () => {
+      if (!main) return;
+      main.src = b.dataset.thumb!;
+      main.alt = b.dataset.alt || '';
+    }),
+  );
+  const form = document.querySelector<HTMLFormElement>('[data-buy]')!;
+  const select = form.querySelector<HTMLSelectElement>('select[name=variant]');
+  const priceEl = document.querySelector('[data-price]');
+  select?.addEventListener('change', () => {
+    const v = (JSON.parse(select.dataset.variants!) as { name: string; price: number }[]).find((x) => x.name === select.value);
+    if (v && priceEl?.firstChild) priceEl.firstChild.textContent = `${fmt.format(v.price)} `;
+  });
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const qty = Math.max(1, Math.min(20, Number((form.elements.namedItem('qty') as HTMLInputElement).value) || 1));
+    addToCart(form.dataset.id!, qty, select?.value);
+    form.querySelector('.added')!.innerHTML = 'Added to your basket! <a href="/cart">View basket</a>';
+  });
+</script>
+
+<style>
+  .product { padding: 1.5rem 0 4rem; }
+  .crumbs { font-size: .95rem; margin-bottom: 1rem; }
+  .layout { display: grid; grid-template-columns: 1.1fr 1fr; gap: 2.5rem; align-items: start; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+  .main-img { border-radius: var(--radius); border: 3px solid var(--charcoal); aspect-ratio: 4/3; object-fit: cover; width: 100%; background: var(--white); }
+  .thumbs { list-style: none; padding: 0; display: flex; gap: .6rem; margin-top: .8rem; }
+  .thumbs button { padding: 0; border: 2px solid var(--charcoal); border-radius: var(--radius-sm); overflow: hidden; cursor: pointer; background: none; width: 90px; }
+  .big { font-size: 1.8rem; }
+  .summary { font-size: 1.15rem; }
+  .buy { display: grid; gap: 1rem; background: var(--white); padding: 1.2rem; border-radius: var(--radius); box-shadow: var(--shadow); margin: 1rem 0; }
+  .qty input { max-width: 120px; }
+  .add { justify-self: start; font-size: 1.15rem; }
+  .added { margin: 0; font-weight: 800; min-height: 1.4em; }
+  .facts { padding-left: 1.2rem; }
+  .safety p { margin: .3rem 0 0; }
+  .small { font-size: .95rem; color: var(--muted); }
+  .desc { margin-top: 3rem; }
+  .related { margin-top: 3rem; }
+</style>

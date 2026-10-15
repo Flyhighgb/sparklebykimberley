@@ -1,0 +1,16 @@
+---
+import Base from '../../layouts/Base.astro';
+import ShopGrid from '../../components/ShopGrid.astro';
+import { getProducts, settings } from '../../lib/content';
+const products = await getProducts();
+---
+<Base title="Shop" description={`Craft kits, card and paper, tools, embellishments, printable downloads and Sparkle merch. Free UK delivery over £${settings.freeDeliveryThreshold}.`}>
+  <section class="page-hero confetti">
+    <div class="container">
+      <h1>The Sparkle Shop</h1>
+      <p>Hand-picked kits and supplies to go with our tutorials, plus printables you can download straight away. Free UK delivery over £{settings.freeDeliveryThreshold}.</p>
+    </div>
+  </section>
+  <section class="container shop"><ShopGrid products={products} /></section>
+</Base>
+<style>.shop { padding-bottom: 4rem; }</style>

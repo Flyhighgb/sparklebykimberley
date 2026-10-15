@@ -1,0 +1,22 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ShopGrid from '../../../components/ShopGrid.astro';
+import { CATEGORIES } from '../../../content.config';
+import { getProducts, slugify } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const products = await getProducts();
+  return CATEGORIES.map((c) => ({
+    params: { category: slugify(c) },
+    props: { name: c, products: products.filter((p) => p.data.category === c) },
+  }));
+}
+const { name, products } = Astro.props;
+---
+<Base title={`${name} | Shop`} description={`Shop ${name.toLowerCase()} at Sparkle by Kimberley. Paper craft supplies with free UK delivery over £30.`}>
+  <section class="page-hero confetti">
+    <div class="container"><h1>{name}</h1></div>
+  </section>
+  <section class="container shop"><ShopGrid products={products} current={name} /></section>
+</Base>
+<style>.shop { padding-bottom: 4rem; }</style>

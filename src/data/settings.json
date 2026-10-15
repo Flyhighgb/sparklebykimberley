@@ -1,0 +1,21 @@
+{
+  "siteName": "Sparkle by Kimberley",
+  "tagline": "Crafting colourful moments that sparkle all year round",
+  "announcement": "Free UK delivery over £30",
+  "deliveryFlatRate": 3.49,
+  "freeDeliveryThreshold": 30,
+  "priceNote": "incl. VAT",
+  "contactEmail": "hello@sparklebykimberley.co.uk",
+  "seasonal": {
+    "title": "Autumn sparkle",
+    "text": "Crunchy leaves, cosy evenings and birthday parties galore. Here are our favourite makes for the season.",
+    "tutorials": ["pop-up-birthday-card", "paper-chain-caterpillar", "origami-crane-garland"]
+  },
+  "social": [
+    { "name": "Instagram", "url": "https://www.instagram.com/sparklebykimberley" },
+    { "name": "Pinterest", "url": "https://www.pinterest.co.uk/sparklebykimberley" },
+    { "name": "TikTok", "url": "https://www.tiktok.com/@sparklebykimberley" },
+    { "name": "YouTube", "url": "https://www.youtube.com/@sparklebykimberley" },
+    { "name": "Facebook", "url": "https://www.facebook.com/sparklebykimberley" }
+  ]
+}

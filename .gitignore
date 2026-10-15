@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+.dev.vars
+worker/.wrangler/
+worker/node_modules/
+.DS_Store
+.cj-token.json

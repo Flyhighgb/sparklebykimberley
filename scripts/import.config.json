@@ -1,0 +1,12 @@
+{
+  "markup": 2.5,
+  "roundTo": 0.99,
+  "includeShippingInCost": true,
+  "usdToGbp": "auto",
+  "usdToGbpFallback": 0.79,
+  "preferWarehouse": "DE",
+  "fallbackWarehouse": "CN",
+  "processingDays": [1, 3],
+  "maxImages": 4,
+  "defaultCategory": "Card & Paper"
+}

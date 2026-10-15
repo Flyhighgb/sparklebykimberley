@@ -1,0 +1,219 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import TutorialCard from '../../components/TutorialCard.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+import { getTutorials, getProducts, audienceLabel, timeLabel, isoDuration, settings } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const tutorials = await getTutorials();
+  return tutorials.map((t) => ({ params: { slug: t.id }, props: { tutorial: t } }));
+}
+
+const { tutorial } = Astro.props;
+const d = tutorial.data;
+const { Content } = await render(tutorial);
+const all = await getTutorials();
+const products = await getProducts();
+const productMap = new Map(products.map((p) => [p.id, p]));
+const shop = d.shopProducts.map((s) => productMap.get(s)).filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+// Related: same audience or shared technique, most overlap first
+const related = all
+  .filter((t) => t.id !== tutorial.id)
+  .map((t) => ({ t, score: (t.data.audience === d.audience ? 2 : 0) + t.data.techniques.filter((x) => d.techniques.includes(x)).length }))
+  .sort((a, b) => b.score - a.score)
+  .slice(0, 3)
+  .map((x) => x.t);
+
+const site = 'https://sparklebykimberley.co.uk';
+const url = `${site}/tutorials/${tutorial.id}`;
+const pinUrl = `https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&media=${encodeURIComponent(site + d.heroImage)}&description=${encodeURIComponent(`${d.title}: ${d.description}`)}`;
+const isKids = d.audience !== 'adults';
+
+const howTo = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: d.title,
+  description: d.description,
+  image: site + d.heroImage,
+  totalTime: isoDuration(d.timeMinutes),
+  estimatedCost: { '@type': 'MonetaryAmount', currency: 'GBP', value: d.cost },
+  supply: d.materials.map((m) => ({ '@type': 'HowToSupply', name: m.item })),
+  step: d.steps.map((s, i) => ({
+    '@type': 'HowToStep',
+    position: i + 1,
+    name: s.title,
+    text: s.text,
+    url: `${url}#step-${i + 1}`,
+    ...(s.image ? { image: site + s.image } : {}),
+  })),
+};
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: site },
+    { '@type': 'ListItem', position: 2, name: 'Tutorials', item: `${site}/tutorials` },
+    { '@type': 'ListItem', position: 3, name: d.title, item: url },
+  ],
+};
+---
+<Base title={d.title} description={d.description} image={d.heroImage} imageAlt={d.heroAlt} type="article">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(howTo)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+    <meta property="article:published_time" content={d.publishDate.toISOString()} />
+  </Fragment>
+
+  <article class="tutorial">
+    <header class="container head">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/tutorials">Tutorials</a></nav>
+      <span class:list={['pill', `pill--${d.audience}`]}>{audienceLabel[d.audience]}</span>
+      <h1>{d.title}</h1>
+      <p class="lead">{d.description}</p>
+    </header>
+
+    <div class="container top">
+      <figure class="hero">
+        <img src={d.heroImage} alt={d.heroAlt} width="1200" height="900" fetchpriority="high" data-pin-description={d.description} />
+        <a class="pin btn btn--pink btn--small sparkle-hover" href={pinUrl} target="_blank" rel="noopener">Save to Pinterest</a>
+      </figure>
+      <aside class="facts" aria-label="Quick facts">
+        <h2 class="script">Quick facts</h2>
+        <dl>
+          <div><dt>Age range</dt><dd>{d.ageRange}</dd></div>
+          <div><dt>Difficulty</dt><dd>{d.difficulty}</dd></div>
+          <div><dt>Time</dt><dd>{timeLabel(d.timeMinutes)}</dd></div>
+          <div><dt>Cost</dt><dd>{d.cost}</dd></div>
+          <div><dt>Techniques</dt><dd>{d.techniques.join(', ')}</dd></div>
+        </dl>
+        <a class="btn btn--small" href="#steps">Jump to the steps</a>
+      </aside>
+    </div>
+
+    <div class="container body">
+      <div class="main">
+        <div class="prose intro"><Content /></div>
+
+        {isKids && d.safety.length > 0 && (
+          <section class="notice notice--safety" aria-labelledby="safety">
+            <h2 id="safety">Safety notes for grown-ups</h2>
+            <ul>{d.safety.map((s) => <li>{s}</li>)}</ul>
+          </section>
+        )}
+
+        <section aria-labelledby="needs">
+          <h2 id="needs">What you'll need</h2>
+          <ul class="materials">
+            {d.materials.map((m) => {
+              const p = m.product ? productMap.get(m.product) : undefined;
+              return <li><span class="tick" aria-hidden="true">✦</span> {m.item}{p && <> · <a href={`/shop/${p.id}`}>get it in the shop</a></>}</li>;
+            })}
+          </ul>
+        </section>
+
+        {d.printable?.file && (
+          <section class="printable">
+            <div>
+              <h2>Free printable template</h2>
+              <p>Print it on A4 paper or card. It's free for personal and classroom use.</p>
+            </div>
+            <a class="btn sparkle-hover" href={d.printable.file} download>Download: {d.printable.label || 'free template (PDF)'}</a>
+          </section>
+        )}
+
+        <section id="steps" aria-labelledby="steps-title">
+          <h2 id="steps-title">Let's make it!</h2>
+          <ol class="steps">
+            {d.steps.map((s, i) => (
+              <li id={`step-${i + 1}`}>
+                {s.image && <img src={s.image} alt={s.alt || s.title} width="800" height="600" loading="lazy" decoding="async" />}
+                <div>
+                  <span class="num" aria-hidden="true">{i + 1}</span>
+                  <h3>{s.title}</h3>
+                  <p>{s.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {d.video && (
+          <section aria-labelledby="video">
+            <h2 id="video">Watch how it's done</h2>
+            <VideoEmbed id={d.video} title={`${d.title} video`} />
+          </section>
+        )}
+
+        {d.tips.length > 0 && (
+          <section class="tips" aria-labelledby="tips">
+            <h2 id="tips"><span class="script">Kimberley's</span> top tips</h2>
+            <ul>{d.tips.map((t) => <li>{t}</li>)}</ul>
+          </section>
+        )}
+
+        {!isKids && d.safety.length > 0 && (
+          <section class="notice notice--safety"><h2>Safety notes</h2><ul>{d.safety.map((s) => <li>{s}</li>)}</ul></section>
+        )}
+
+        <p class="share">Made this? Share it with <strong>#SparkleByKimberley</strong> or <a href={pinUrl} target="_blank" rel="noopener">pin it for later</a>.</p>
+      </div>
+
+      {shop.length > 0 && (
+        <aside class="shop-box" aria-labelledby="shop-this">
+          <h2 id="shop-this">Shop this project</h2>
+          <div class="shop-list">{shop.map((p) => <ProductCard product={p} />)}</div>
+          <p class="small">Free UK delivery over £{settings.freeDeliveryThreshold}.</p>
+        </aside>
+      )}
+    </div>
+
+    <section class="section section--white related" aria-labelledby="related">
+      <div class="container">
+        <h2 id="related">You might also love</h2>
+        <div class="grid">{related.map((t) => <TutorialCard tutorial={t} />)}</div>
+      </div>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .head { padding-top: 1.5rem; }
+  .crumbs { font-size: .95rem; margin-bottom: .6rem; }
+  .lead { font-size: 1.2rem; max-width: 60ch; }
+  .top { display: grid; grid-template-columns: 1.7fr 1fr; gap: 1.5rem; align-items: start; }
+  @media (max-width: 860px) { .top { grid-template-columns: 1fr; } }
+  .hero { margin: 0; position: relative; }
+  .hero img { border-radius: var(--radius); border: 3px solid var(--charcoal); width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+  .pin { position: absolute; top: 1rem; right: 1rem; }
+  .facts { background: var(--yellow); border: 3px solid var(--charcoal); border-radius: var(--radius); padding: 1.3rem 1.4rem; box-shadow: 6px 6px 0 var(--charcoal); }
+  .facts h2 { font-weight: 400; font-size: 1.6rem; }
+  dl { margin: 0 0 1rem; display: grid; gap: .5rem; }
+  dl div { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 2px dotted rgba(43,43,43,.35); padding-bottom: .35rem; }
+  dt { font-weight: 800; }
+  dd { margin: 0; text-align: right; }
+  .body { display: grid; grid-template-columns: 1fr 300px; gap: 2.5rem; padding: 2.5rem 0 3rem; align-items: start; }
+  @media (max-width: 960px) { .body { grid-template-columns: 1fr; } }
+  .main > section { margin-bottom: 2.2rem; }
+  .materials { list-style: none; padding: 0; columns: 2 260px; }
+  .materials li { break-inside: avoid; margin-bottom: .5rem; }
+  .tick { color: var(--pink-ink); }
+  .printable { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; background: #e3eefc; border-radius: var(--radius); padding: 1.3rem 1.5rem; border: 3px dashed var(--blue); }
+  .printable h2 { font-size: 1.3rem; }
+  .printable p { margin: 0; }
+  .steps { list-style: none; padding: 0; display: grid; gap: 1.6rem; counter-reset: s; }
+  .steps li { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; background: var(--white); border-radius: var(--radius); padding: 1rem; box-shadow: var(--shadow); align-items: center; }
+  @media (max-width: 640px) { .steps li { grid-template-columns: 1fr; } }
+  .steps img { border-radius: var(--radius-sm); aspect-ratio: 4/3; object-fit: cover; width: 100%; }
+  .num { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--turquoise); border: 2px solid var(--charcoal); font-weight: 800; font-size: 1.2rem; margin-bottom: .4rem; }
+  .tips { background: var(--white); border-radius: var(--radius); padding: 1.3rem 1.5rem; border-left: 8px solid var(--pink); }
+  .tips .script { color: var(--pink-ink); font-weight: 400; }
+  .shop-box { position: sticky; top: 90px; background: var(--white); border-radius: var(--radius); padding: 1.2rem; box-shadow: var(--shadow); border: 3px solid var(--turquoise); }
+  @media (max-width: 960px) { .shop-box { position: static; } }
+  .shop-box h2 { font-size: 1.3rem; }
+  .shop-list { display: grid; gap: 1rem; }
+  .small { font-size: .95rem; color: var(--muted); margin: .8rem 0 0; }
+  .share { font-size: 1.05rem; }
+</style>

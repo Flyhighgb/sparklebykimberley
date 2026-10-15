@@ -1,0 +1,141 @@
+---
+import Base from '../../layouts/Base.astro';
+import TutorialCard from '../../components/TutorialCard.astro';
+import { getTutorials, capitalise } from '../../lib/content';
+import { DIFFICULTIES, TECHNIQUES } from '../../content.config';
+
+const tutorials = await getTutorials();
+const usedOccasions = [...new Set(tutorials.flatMap((t) => t.data.occasions))].sort();
+---
+<Base title="Paper craft tutorials" description="Free step-by-step paper craft tutorials for grown-ups, kids and families. Filter by difficulty, time, season and technique: origami, quilling, pop-up cards and more.">
+  <section class="page-hero confetti">
+    <div class="container">
+      <h1>Paper craft tutorials</h1>
+      <p>Pick a make, grab some paper and let's get crafty. Every tutorial is free, with clear steps and photos.</p>
+    </div>
+  </section>
+
+  <section class="container hub">
+    <form class="filters" data-filters role="search" aria-label="Filter tutorials">
+      <div class="search">
+        <label for="q">Search tutorials</label>
+        <input id="q" name="q" type="search" placeholder="Try 'cranes' or 'birthday'" />
+      </div>
+      <fieldset>
+        <legend>Who's crafting?</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="audience" value="" checked /> <span>Everyone</span></label>
+          <label class="chip"><input type="radio" name="audience" value="adults" /> <span>Adults</span></label>
+          <label class="chip"><input type="radio" name="audience" value="kids" /> <span>Kids</span></label>
+          <label class="chip"><input type="radio" name="audience" value="family" /> <span>Family</span></label>
+        </div>
+      </fieldset>
+      <div class="selects">
+        <div>
+          <label for="difficulty">Difficulty</label>
+          <select id="difficulty" name="difficulty">
+            <option value="">Any</option>
+            {DIFFICULTIES.map((d) => <option value={d}>{d}</option>)}
+          </select>
+        </div>
+        <div>
+          <label for="time">Time</label>
+          <select id="time" name="time">
+            <option value="">Any</option>
+            <option value="under-30">Under 30 mins</option>
+            <option value="30-60">30 to 60 mins</option>
+            <option value="over-60">Over an hour</option>
+          </select>
+        </div>
+        <div>
+          <label for="occasion">Occasion or season</label>
+          <select id="occasion" name="occasion">
+            <option value="">Any</option>
+            {usedOccasions.map((o) => <option value={o}>{capitalise(o)}</option>)}
+          </select>
+        </div>
+        <div>
+          <label for="technique">Technique</label>
+          <select id="technique" name="technique">
+            <option value="">Any</option>
+            {TECHNIQUES.map((t) => <option value={t}>{capitalise(t)}</option>)}
+          </select>
+        </div>
+      </div>
+      <button type="reset" class="btn btn--white btn--small">Clear filters</button>
+    </form>
+
+    <div>
+      <p class="count" role="status" aria-live="polite" data-count>{tutorials.length} tutorials</p>
+      <div class="grid" data-results>
+        {tutorials.map((t) => <TutorialCard tutorial={t} filterable />)}
+      </div>
+      <p class="empty notice" data-empty hidden>No tutorials match those filters yet. Try clearing one or two. New makes are added all the time!</p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-filters]')!;
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-results] > article')];
+  const count = document.querySelector('[data-count]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const fields = ['q', 'audience', 'difficulty', 'time', 'occasion', 'technique'] as const;
+
+  // Pre-fill from the URL, e.g. /tutorials?audience=kids&technique=origami
+  const params = new URLSearchParams(location.search);
+  for (const f of fields) {
+    const v = params.get(f);
+    if (!v) continue;
+    const el = form.elements.namedItem(f);
+    if (el instanceof RadioNodeList) el.value = v;
+    else if (el) (el as HTMLInputElement).value = v;
+  }
+
+  function apply() {
+    const fd = new FormData(form);
+    const get = (k: string) => String(fd.get(k) || '').trim().toLowerCase();
+    const q = get('q'), audience = get('audience'), difficulty = get('difficulty'), time = get('time'), occasion = get('occasion'), technique = get('technique');
+    let shown = 0;
+    for (const c of cards) {
+      const d = c.dataset;
+      const ok =
+        (!q || q.split(/\s+/).every((w) => d.search!.includes(w))) &&
+        (!audience || d.audience === audience) &&
+        (!difficulty || d.difficulty!.toLowerCase() === difficulty) &&
+        (!time || d.time === time) &&
+        (!occasion || d.occasions!.split('|').includes(occasion)) &&
+        (!technique || d.techniques!.split('|').includes(technique));
+      c.hidden = !ok;
+      if (ok) shown++;
+    }
+    count.textContent = `${shown} tutorial${shown === 1 ? '' : 's'}`;
+    empty.hidden = shown > 0;
+    const out = new URLSearchParams();
+    for (const f of fields) { const v = get(f); if (v) out.set(f, v); }
+    history.replaceState(null, '', out.toString() ? `?${out}` : location.pathname);
+  }
+  form.addEventListener('input', apply);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  form.addEventListener('reset', () => setTimeout(apply));
+  apply();
+</script>
+
+<style>
+  .hub { display: grid; grid-template-columns: 280px 1fr; gap: 2rem; padding-bottom: 4rem; align-items: start; }
+  @media (max-width: 860px) { .hub { grid-template-columns: 1fr; } }
+  .filters { background: var(--white); border-radius: var(--radius); padding: 1.3rem; box-shadow: var(--shadow); display: grid; gap: 1.1rem; position: sticky; top: 90px; }
+  @media (max-width: 860px) { .filters { position: static; } .selects { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; } }
+  @media (max-width: 480px) { .selects { grid-template-columns: 1fr; } }
+  .selects { display: grid; gap: .8rem; }
+  fieldset { border: 0; padding: 0; margin: 0; }
+  legend { font-weight: 700; margin-bottom: .4rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .chip { margin: 0; font-weight: 700; }
+  .chip input { position: absolute; opacity: 0; }
+  .chip span { display: inline-block; padding: .45rem .9rem; border: 2px solid var(--charcoal); border-radius: 999px; cursor: pointer; min-height: 40px; }
+  .chip input:checked + span { background: var(--yellow); }
+  .chip input:focus-visible + span { outline: 3px solid var(--blue); outline-offset: 2px; }
+  .count { font-weight: 800; }
+  article[hidden] { display: none; }
+</style>

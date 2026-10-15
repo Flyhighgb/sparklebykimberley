@@ -1,0 +1,38 @@
+{
+  "title": "Quilling Starter Kit",
+  "summary": "Everything you need to start quilling: 600 paper strips, a slotted tool, a crimper and a shaping board.",
+  "description": "A lovely all-in-one kit for getting started with paper quilling.\n\n- 600 strips of 3mm and 5mm quilling paper in 36 colours\n- Slotted quilling tool and needle tool\n- Circle sizing board, tweezers and a strip crimper\n- Stored in a handy box\n\nPerfect for our [Quilled Flower Greetings Card](/tutorials/quilled-flower-greetings-card) tutorial.",
+  "category": "Craft Kits (Adults)",
+  "price": 16.99,
+  "costPrice": 6.2,
+  "fulfilment": "cj",
+  "supplier": {
+    "name": "CJdropshipping",
+    "productId": "SAMPLE-CJ-PID-QUILL",
+    "sku": "CJWJ123456",
+    "variantId": "SAMPLE-CJ-VID-QUILL",
+    "url": "https://cjdropshipping.com/",
+    "warehouse": "DE"
+  },
+  "variants": [],
+  "deliveryEstimate": "5 to 9 working days",
+  "images": [
+    {
+      "src": "/images/products/quilling-starter-kit-1.jpg",
+      "alt": "Quilling starter kit laid out with colourful paper strips and tools"
+    },
+    {
+      "src": "/images/products/quilling-starter-kit-2.jpg",
+      "alt": "Close up of quilled flowers made with the kit"
+    }
+  ],
+  "childrensItem": false,
+  "ageSuitability": "Adults and teens 14+",
+  "safetyNote": "Contains sharp tools. Not suitable for children under 14.",
+  "featured": true,
+  "boughtTogether": [
+    "pastel-card-blanks-pack",
+    "printable-birthday-card-bundle"
+  ],
+  "draft": false
+}

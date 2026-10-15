@@ -1,0 +1,39 @@
+---
+/** YouTube video that only loads after the visitor agrees to embedded media cookies. */
+interface Props { id: string; title: string }
+const { id, title } = Astro.props;
+---
+<div class="video" data-video={id} data-title={title}>
+  <div class="placeholder">
+    <p><strong>Watch the video</strong><br />This video is hosted on YouTube, which may set cookies.</p>
+    <button type="button" class="btn btn--small" data-load-video>Load video</button>
+  </div>
+</div>
+<script>
+  import { getConsent, setConsent } from '../scripts/consent';
+  function load(el: HTMLElement) {
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(el.dataset.video!)}`;
+    iframe.title = el.dataset.title || 'Video';
+    iframe.allow = 'accelerometer; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.loading = 'lazy';
+    el.replaceChildren(iframe);
+  }
+  const vids = document.querySelectorAll<HTMLElement>('[data-video]');
+  const tryAll = () => getConsent()?.media && vids.forEach(load);
+  vids.forEach((v) =>
+    v.querySelector('[data-load-video]')?.addEventListener('click', () => {
+      const c = getConsent();
+      setConsent({ analytics: !!c?.analytics, media: true });
+      load(v);
+    }),
+  );
+  tryAll();
+  window.addEventListener('consent:change', tryAll);
+</script>
+<style>
+  .video { aspect-ratio: 16/9; border-radius: var(--radius); overflow: hidden; background: var(--charcoal); border: 3px solid var(--charcoal); }
+  .video :global(iframe) { width: 100%; height: 100%; border: 0; }
+  .placeholder { height: 100%; display: grid; place-content: center; text-align: center; color: #fff; padding: 1rem; gap: .5rem; }
+</style>

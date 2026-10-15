@@ -1,0 +1,25 @@
+---
+import type { Tutorial } from '../lib/content';
+import { audienceLabel, timeLabel, timeBucket } from '../lib/content';
+interface Props { tutorial: Tutorial; filterable?: boolean }
+const { tutorial, filterable = false } = Astro.props;
+const d = tutorial.data;
+const attrs = filterable
+  ? {
+      'data-audience': d.audience,
+      'data-difficulty': d.difficulty,
+      'data-time': timeBucket(d.timeMinutes),
+      'data-occasions': d.occasions.join('|'),
+      'data-techniques': d.techniques.join('|'),
+      'data-search': `${d.title} ${d.description} ${d.techniques.join(' ')} ${d.occasions.join(' ')}`.toLowerCase(),
+    }
+  : {};
+---
+<article class="card tcard" {...attrs}>
+  <img class="card__img" src={d.heroImage} alt={d.heroAlt} width="800" height="600" loading="lazy" decoding="async" />
+  <div class="card__body">
+    <span class:list={['pill', `pill--${d.audience}`]}>{audienceLabel[d.audience]}</span>
+    <h3 class="card__title"><a href={`/tutorials/${tutorial.id}`}>{d.title}</a></h3>
+    <p class="card__meta">{d.difficulty} · {timeLabel(d.timeMinutes)} · {d.ageRange}</p>
+  </div>
+</article>

@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro';
+import { API_URL, settings } from '../lib/content';
+const faqs = [
+  { q: 'How much is delivery?', a: `UK delivery is £${settings.deliveryFlatRate.toFixed(2)}, and it's free on orders over £${settings.freeDeliveryThreshold}. Printable downloads have no delivery charge.` },
+  { q: 'How long will my order take?', a: 'Each product page shows an estimated delivery time, usually 3 to 9 working days. We email your tracking number as soon as each parcel ships.' },
+  { q: 'Why did my order arrive in more than one parcel?', a: 'Some items are sent directly from different makers and suppliers. You never pay extra for this.' },
+  { q: 'Can I return something?', a: "Yes. You have 14 days from receiving your order to change your mind, under the UK Consumer Contracts Regulations. Faulty items are always replaced or refunded. See our Returns & Refunds page for details." },
+  { q: "I haven't received my download link", a: "Download links are emailed straight after payment and work for 7 days. Check your spam or promotions folder first. Still nothing? Send us a message with your order reference and we'll resend it." },
+  { q: 'Can I use the printables in my classroom?', a: 'Absolutely! Free printables are fine for personal and classroom use. Paid printables are for the buyer’s own home or classroom. Please don’t share or resell the files.' },
+  { q: 'Are your kids’ kits safe?', a: 'All kids’ kits are UKCA or CE marked and show age guidance and warnings on the product page. Most contain small parts, so they’re not suitable for under-3s. Always supervise young crafters.' },
+  { q: 'Do you collect information about children?', a: 'No. Kids’ Corner has no forms or sign-ups, and our shop and newsletter are for adults only.' },
+];
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Base title="Contact & FAQ" description="Get in touch with Kimberley, and find answers about delivery, returns, downloads and kids' craft safety.">
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+  <section class="page-hero confetti">
+    <div class="container">
+      <h1>Say hello!</h1>
+      <p>Questions, ideas or photos of your makes? I'd love to hear from you. I usually reply within two working days.</p>
+    </div>
+  </section>
+  <div class="container contact">
+    <form class="form" data-contact action={`${API_URL}/api/contact`} method="post">
+      <h2>Send a message</h2>
+      <div><label for="c-name">Your name</label><input id="c-name" name="name" type="text" required autocomplete="name" /></div>
+      <div><label for="c-email">Email address</label><input id="c-email" name="email" type="email" required autocomplete="email" /></div>
+      <div><label for="c-order">Order reference (if it's about an order)</label><input id="c-order" name="order" type="text" /></div>
+      <div><label for="c-msg">Message</label><textarea id="c-msg" name="message" rows="6" required maxlength="5000"></textarea></div>
+      <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <label class="checkbox"><input type="checkbox" name="adult" required /> <span>I'm 18 or over. (Under 18? Please ask a grown-up to get in touch for you.)</span></label>
+      <button class="btn sparkle-hover" type="submit">Send message</button>
+      <p class="msg" role="status" aria-live="polite"></p>
+      <p class="small">We'll only use your details to reply. See our <a href="/privacy">privacy policy</a>. Or email <a href={`mailto:${settings.contactEmail}`}>{settings.contactEmail}</a>.</p>
+    </form>
+    <section class="faq" aria-labelledby="faq">
+      <h2 id="faq">Frequently asked questions</h2>
+      {faqs.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+      <p>More detail: <a href="/delivery">Delivery</a> · <a href="/returns">Returns &amp; Refunds</a> · <a href="/terms">Terms</a></p>
+    </section>
+  </div>
+</Base>
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact]')!;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = form.querySelector('.msg')!;
+    const btn = form.querySelector('button')!;
+    btn.disabled = true;
+    msg.textContent = 'Sending…';
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+      if (!res.ok) throw new Error();
+      form.reset();
+      msg.textContent = "Thank you! Your message is on its way and I'll be in touch soon.";
+    } catch {
+      msg.textContent = "Sorry, that didn't send. Please try again, or email us directly.";
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+<style>
+  .contact { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; padding-bottom: 4rem; align-items: start; }
+  @media (max-width: 860px) { .contact { grid-template-columns: 1fr; } }
+  .form { background: var(--white); border-radius: var(--radius); padding: clamp(1.3rem, 4vw, 2rem); display: grid; gap: 1rem; border: 3px solid var(--charcoal); box-shadow: 8px 8px 0 var(--pink); }
+  .msg { font-weight: 800; margin: 0; min-height: 1.4em; }
+  .small { font-size: .95rem; color: var(--muted); margin: 0; }
+  details { background: var(--white); border-radius: var(--radius-sm); margin-bottom: .7rem; box-shadow: var(--shadow); }
+  summary { cursor: pointer; font-weight: 800; padding: 1rem 1.2rem; list-style: none; position: relative; padding-right: 2.6rem; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '✦'; position: absolute; right: 1.1rem; color: var(--pink-ink); transition: transform .2s; }
+  details[open] summary::after { transform: rotate(45deg); }
+  details p { padding: 0 1.2rem 1rem; margin: 0; }
+</style>

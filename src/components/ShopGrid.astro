@@ -1,0 +1,22 @@
+---
+import ProductCard from './ProductCard.astro';
+import { CATEGORIES } from '../content.config';
+import { slugify, type Product } from '../lib/content';
+interface Props { products: Product[]; current?: string }
+const { products, current } = Astro.props;
+---
+<nav class="cats" aria-label="Shop categories">
+  <a href="/shop" aria-current={!current ? 'page' : undefined}>Everything</a>
+  {CATEGORIES.map((c) => <a href={`/shop/category/${slugify(c)}`} aria-current={current === c ? 'page' : undefined}>{c}</a>)}
+</nav>
+{products.length > 0 ? (
+  <div class="grid">{products.map((p) => <ProductCard product={p} />)}</div>
+) : (
+  <p class="notice">Lovely new things are on their way to this category. Check back soon, or <a href="/shop">browse everything</a>.</p>
+)}
+<style>
+  .cats { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; justify-content: center; }
+  .cats a { padding: .5rem 1rem; border: 2px solid var(--charcoal); border-radius: 999px; text-decoration: none; color: var(--charcoal); font-weight: 800; background: var(--white); min-height: 44px; display: inline-flex; align-items: center; }
+  .cats a:hover { background: var(--blush); }
+  .cats a[aria-current='page'] { background: var(--yellow); }
+</style>

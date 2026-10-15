@@ -1,0 +1,140 @@
+---
+import Base from '../layouts/Base.astro';
+import { getProducts, settings, API_URL } from '../lib/content';
+const products = (await getProducts()).map((p) => ({
+  id: p.id,
+  title: p.data.title,
+  price: p.data.price,
+  image: p.data.images[0].src,
+  digital: p.data.fulfilment === 'digital',
+  delivery: p.data.deliveryEstimate,
+  variants: p.data.variants.map((v) => ({ name: v.name, price: v.price ?? p.data.price })),
+}));
+const config = { products, flat: settings.deliveryFlatRate, freeOver: settings.freeDeliveryThreshold, api: API_URL };
+---
+<Base title="Your basket" description="Your Sparkle by Kimberley shopping basket." noindex>
+  <section class="container cart">
+    <h1>Your basket</h1>
+    <div data-cart-root>
+      <p class="loading">Loading your basket…</p>
+    </div>
+    <template id="empty-tpl">
+      <div class="empty notice">
+        <p><strong>Your basket is empty.</strong> Let's fix that!</p>
+        <a class="btn sparkle-hover" href="/shop">Visit the shop</a>
+      </div>
+    </template>
+  </section>
+</Base>
+<script type="application/json" id="cart-config" set:html={JSON.stringify(config)} />
+<script>
+  import { getCart, setQty, startCheckout } from '../scripts/cart';
+  type P = { id: string; title: string; price: number; image: string; digital: boolean; delivery: string; variants: { name: string; price: number }[] };
+  const cfg = JSON.parse(document.getElementById('cart-config')!.textContent!) as { products: P[]; flat: number; freeOver: number; api: string };
+  const byId = new Map(cfg.products.map((p) => [p.id, p]));
+  const fmt = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
+  const root = document.querySelector<HTMLElement>('[data-cart-root]')!;
+  const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
+  function render() {
+    const lines = getCart()
+      .map((l) => {
+        const p = byId.get(l.id);
+        if (!p) return null;
+        const v = l.variant ? p.variants.find((x) => x.name === l.variant) : undefined;
+        if (l.variant && !v) return null;
+        return { ...l, p, unit: v ? v.price : p.price };
+      })
+      .filter((x): x is NonNullable<typeof x> => Boolean(x));
+    if (!lines.length) {
+      root.replaceChildren((document.getElementById('empty-tpl') as HTMLTemplateElement).content.cloneNode(true));
+      return;
+    }
+    const subtotal = lines.reduce((s, l) => s + l.unit * l.qty, 0);
+    const physical = lines.some((l) => !l.p.digital);
+    const delivery = !physical || subtotal >= cfg.freeOver ? 0 : cfg.flat;
+    const toGo = cfg.freeOver - subtotal;
+    root.innerHTML = `
+      <ul class="lines">
+        ${lines
+          .map(
+            (l) => `
+          <li class="line">
+            <img src="${esc(l.p.image)}" alt="" width="120" height="90" loading="lazy" />
+            <div class="line-info">
+              <a href="/shop/${esc(l.p.id)}" class="line-title">${esc(l.p.title)}</a>
+              ${l.variant ? `<span class="muted">${esc(l.variant)}</span>` : ''}
+              <span class="muted">${l.p.digital ? 'Instant download' : 'Delivery ' + esc(l.p.delivery)}</span>
+            </div>
+            <div class="line-qty">
+              <label class="visually-hidden" for="q-${esc(l.id)}-${esc(l.variant || '')}">Quantity for ${esc(l.p.title)}</label>
+              <input id="q-${esc(l.id)}-${esc(l.variant || '')}" type="number" min="0" max="20" value="${l.qty}" data-id="${esc(l.id)}" data-variant="${esc(l.variant || '')}" />
+              <button type="button" class="remove" data-remove data-id="${esc(l.id)}" data-variant="${esc(l.variant || '')}">Remove</button>
+            </div>
+            <div class="line-total">${fmt.format(l.unit * l.qty)}</div>
+          </li>`,
+          )
+          .join('')}
+      </ul>
+      <div class="summary">
+        ${physical && toGo > 0 ? `<p class="nudge">You're <strong>${fmt.format(toGo)}</strong> away from free UK delivery!</p>` : ''}
+        ${physical && toGo <= 0 ? `<p class="nudge">Hooray, your order gets <strong>free UK delivery</strong>!</p>` : ''}
+        <dl>
+          <div><dt>Subtotal</dt><dd>${fmt.format(subtotal)}</dd></div>
+          <div><dt>Delivery</dt><dd>${physical ? (delivery ? fmt.format(delivery) : 'Free') : 'Not needed'}</dd></div>
+          <div class="total"><dt>Estimated total</dt><dd>${fmt.format(subtotal + delivery)}</dd></div>
+        </dl>
+        <p class="muted small">Prices include VAT where applicable. You'll enter your UK delivery address on the next page. We ship to UK addresses only.</p>
+        <button type="button" class="btn sparkle-hover checkout" data-checkout>Checkout securely</button>
+        <p class="muted small">Pay by card, Apple Pay or Google Pay. Payments are handled by Stripe; we never see your card details.</p>
+        <p class="error" role="alert" data-error></p>
+      </div>`;
+  }
+
+  root.addEventListener('change', (e) => {
+    const t = e.target as HTMLInputElement;
+    if (t.matches('input[type=number]')) setQty(t.dataset.id!, t.dataset.variant || undefined, Math.floor(Number(t.value) || 0));
+  });
+  root.addEventListener('click', async (e) => {
+    const t = e.target as HTMLElement;
+    if (t.matches('[data-remove]')) setQty(t.dataset.id!, t.dataset.variant || undefined, 0);
+    if (t.matches('[data-checkout]')) {
+      const btn = t as HTMLButtonElement;
+      const err = root.querySelector('[data-error]')!;
+      btn.disabled = true;
+      btn.textContent = 'Taking you to checkout…';
+      try {
+        await startCheckout(cfg.api);
+      } catch (ex) {
+        err.textContent = (ex as Error).message;
+        btn.disabled = false;
+        btn.textContent = 'Checkout securely';
+      }
+    }
+  });
+  window.addEventListener('cart:change', render);
+  render();
+</script>
+<style>
+  .cart { padding: 2rem 0 4rem; }
+  :global(.lines) { list-style: none; padding: 0; display: grid; gap: 1rem; }
+  :global(.line) { display: grid; grid-template-columns: 100px 1fr auto auto; gap: 1rem; align-items: center; background: var(--white); border-radius: var(--radius); padding: .8rem; box-shadow: var(--shadow); }
+  @media (max-width: 640px) { :global(.line) { grid-template-columns: 80px 1fr; } :global(.line-qty), :global(.line-total) { grid-column: 2; } }
+  :global(.line img) { border-radius: var(--radius-sm); aspect-ratio: 4/3; object-fit: cover; }
+  :global(.line-info) { display: grid; }
+  :global(.line-title) { font-weight: 800; color: var(--charcoal); }
+  :global(.muted) { color: var(--muted); }
+  :global(.line-qty) { display: flex; gap: .6rem; align-items: center; }
+  :global(.line-qty input) { width: 80px; }
+  :global(.remove) { background: none; border: 0; color: var(--blue-ink); text-decoration: underline; cursor: pointer; font: inherit; min-height: 44px; }
+  :global(.line-total) { font-weight: 800; font-size: 1.1rem; }
+  :global(.summary) { margin: 2rem 0 0 auto; max-width: 440px; background: var(--white); border-radius: var(--radius); padding: 1.4rem; border: 3px solid var(--charcoal); box-shadow: 6px 6px 0 var(--yellow); }
+  :global(.summary dl div) { display: flex; justify-content: space-between; padding: .3rem 0; }
+  :global(.summary dt) { font-weight: 700; }
+  :global(.summary dd) { margin: 0; }
+  :global(.summary .total) { border-top: 2px dotted var(--charcoal); font-size: 1.2rem; font-weight: 800; margin-top: .3rem; padding-top: .6rem; }
+  :global(.nudge) { background: #fff3c4; border-radius: var(--radius-sm); padding: .6rem .9rem; }
+  :global(.small) { font-size: .95rem; }
+  :global(.checkout) { width: 100%; font-size: 1.15rem; }
+  :global(.error) { color: #a3001b; font-weight: 800; margin: .6rem 0 0; }
+</style>

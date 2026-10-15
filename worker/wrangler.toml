@@ -1,0 +1,41 @@
+# Sparkle by Kimberley order Worker (Cloudflare Workers free tier)
+# Handles: Stripe checkout + webhooks, supplier routing, downloads, contact form,
+# newsletter sign-ups, the orders admin page and the scheduled tracking checks.
+name = "sparkle-orders"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+# The Worker answers on its own sub-domain. Cloudflare creates the DNS record for you.
+routes = [{ pattern = "api.sparklebykimberley.co.uk", custom_domain = true }]
+
+# Check suppliers for tracking numbers every 3 hours (and auto-retry failed submissions).
+[triggers]
+crons = ["0 */3 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "sparkle-orders"
+# Paste the id printed by `npx wrangler d1 create sparkle-orders` here:
+database_id = "REPLACE-WITH-YOUR-D1-DATABASE-ID"
+
+[[r2_buckets]]
+binding = "DOWNLOADS"
+bucket_name = "sparkle-downloads"
+
+# Plain settings (not secret). Secrets are added with `npx wrangler secret put NAME`.
+[vars]
+SITE_URL = "https://sparklebykimberley.co.uk"
+API_URL = "https://api.sparklebykimberley.co.uk"
+ALLOWED_ORIGINS = "https://sparklebykimberley.co.uk,https://www.sparklebykimberley.co.uk,http://localhost:4321"
+OWNER_EMAIL = "hello@sparklebykimberley.co.uk"
+EMAIL_FROM = "Sparkle by Kimberley <orders@sparklebykimberley.co.uk>"
+FREE_DELIVERY_THRESHOLD_PENCE = "3000"
+DOWNLOAD_LINK_DAYS = "7"
+# "sandbox" while testing, "live" when you're ready to take real Prodigi orders.
+PRODIGI_ENV = "sandbox"
+# CJ warehouse to ship from first (DE = Germany, fastest to the UK), and the fallback.
+CJ_FROM_COUNTRY = "DE"
+CJ_FALLBACK_COUNTRY = "CN"
+# Optional: force a CJ shipping method by name. Leave blank to pick the cheapest automatically.
+CJ_LOGISTIC_NAME = ""

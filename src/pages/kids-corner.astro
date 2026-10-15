@@ -1,0 +1,95 @@
+---
+import Base from '../layouts/Base.astro';
+import TutorialCard from '../components/TutorialCard.astro';
+import Wave from '../components/Wave.astro';
+import { getTutorials } from '../lib/content';
+
+const tutorials = (await getTutorials()).filter((t) => t.data.audience !== 'adults');
+const printables = [
+  { file: '/printables/rainbow-colouring-sheet.pdf', title: 'Rainbow colouring sheet', emoji: '🌈', colour: 'yellow' },
+  { file: '/printables/star-colouring-page.pdf', title: 'Super star colouring page', emoji: '⭐', colour: 'pink' },
+  { file: '/printables/paper-crown-template.pdf', title: 'Paper crown to colour and wear', emoji: '👑', colour: 'turquoise' },
+  { file: '/printables/caterpillar-head-template.pdf', title: 'Caterpillar face template', emoji: '🐛', colour: 'blue' },
+  { file: '/printables/fortune-teller-template.pdf', title: 'Fortune teller template', emoji: '🔮', colour: 'yellow' },
+];
+---
+<Base title="Kids' Corner" description="Easy paper crafts for little hands, plus free colouring and activity printables. Written for parents, carers and teachers." bodyClass="kids">
+  <section class="kids-hero confetti">
+    <div class="container">
+      <span class="script hi">Hello, little crafters!</span>
+      <h1>Kids' Corner</h1>
+      <p class="big">Let's cut, stick, fold and colour! Pick a craft or print a free sheet.</p>
+      <div class="big-btns">
+        <a class="btn kid-btn" href="#crafts"><span aria-hidden="true">✂️</span> Crafts to make</a>
+        <a class="btn btn--pink kid-btn" href="#printables"><span aria-hidden="true">🖍️</span> Free printables</a>
+        <a class="btn btn--turquoise kid-btn" href="#grown-ups"><span aria-hidden="true">👋</span> For grown-ups</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="crafts" class="section">
+    <div class="container">
+      <h2 class="kid-h">Crafts to make</h2>
+      <div class="grid">{tutorials.map((t) => <TutorialCard tutorial={t} />)}</div>
+    </div>
+  </section>
+
+  <Wave from="var(--blush)" to="#FFF7D1" />
+  <section id="printables" class="section printables">
+    <div class="container">
+      <h2 class="kid-h">Free printables</h2>
+      <p class="big">Print, colour, cut and play. Free for home and classroom use.</p>
+      <ul class="prints">
+        {printables.map((p) => (
+          <li class={`print print--${p.colour}`}>
+            <span class="emoji" aria-hidden="true">{p.emoji}</span>
+            <a href={p.file} download class="stretched">{p.title}</a>
+            <span class="dl">Download PDF</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+  <Wave from="#FFF7D1" to="var(--blush)" flip />
+
+  <section id="grown-ups" class="section">
+    <div class="container prose grown">
+      <h2>A note for parents, carers and teachers</h2>
+      <p>Kids' Corner is written for you, the grown-ups, to use with children. Every craft lists a suggested age, the things you'll need and any safety notes. Please read those first.</p>
+      <ul>
+        <li><strong>Supervise:</strong> small parts like googly eyes and pom-poms are a choking hazard for under-3s.</li>
+        <li><strong>Sharp things are for grown-ups:</strong> you do the craft knife and wire cutting.</li>
+        <li><strong>Mess is welcome:</strong> pop down some newspaper and use washable, non-toxic glue and pens.</li>
+        <li><strong>It doesn't need to be perfect:</strong> praise the effort, not the result. Wonky is wonderful!</li>
+      </ul>
+      <p><strong>Privacy:</strong> we don't collect any information from children. There are no sign-ups, comments or forms in Kids' Corner, and the printables download straight away with no email needed.</p>
+      <p>Teachers, you're welcome to print our free sheets for your class. Shop kits are UKCA/CE marked and show age guidance on each product page.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .kids-hero { background: var(--yellow); padding: clamp(2rem, 6vw, 4rem) 0; text-align: center; border-bottom: 4px solid var(--charcoal); }
+  .hi { font-size: 1.7rem; color: var(--charcoal); }
+  .kids-hero h1 { font-size: clamp(2.6rem, 8vw, 4.2rem); }
+  .big { font-size: 1.35rem; font-weight: 700; }
+  .big-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 1.5rem; }
+  .kid-btn { font-size: 1.3rem; min-height: 64px; padding: 1rem 1.8rem; --btn-bg: var(--white); }
+  .kid-btn.btn--pink { --btn-bg: var(--pink); }
+  .kid-btn.btn--turquoise { --btn-bg: var(--turquoise); }
+  .kid-h { font-size: clamp(2rem, 5vw, 2.8rem); text-align: center; }
+  .printables { background: #fff7d1; }
+  .printables .big { text-align: center; }
+  .prints { list-style: none; padding: 0; display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
+  .print { position: relative; border: 3px solid var(--charcoal); border-radius: var(--radius); padding: 1.4rem 1.2rem; text-align: center; box-shadow: 6px 6px 0 var(--charcoal); transition: transform .2s ease; }
+  .print:hover { transform: translateY(-4px) rotate(-1deg); }
+  .print--yellow { background: var(--yellow); }
+  .print--pink { background: var(--pink); }
+  .print--turquoise { background: var(--turquoise); }
+  .print--blue { background: #9cc0ef; }
+  .emoji { display: block; font-size: 3rem; }
+  .stretched { color: var(--charcoal); font-weight: 800; font-size: 1.25rem; text-decoration: none; display: block; margin: .4rem 0; }
+  .stretched::after { content: ''; position: absolute; inset: 0; }
+  .dl { display: inline-block; background: var(--white); border-radius: 999px; padding: .3rem .9rem; font-weight: 800; border: 2px solid var(--charcoal); }
+  .grown { margin: 0 auto; background: var(--white); border-radius: var(--radius); padding: clamp(1.4rem, 4vw, 2.4rem); border: 3px dashed var(--turquoise); }
+</style>

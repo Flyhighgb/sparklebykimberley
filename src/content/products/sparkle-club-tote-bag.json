@@ -1,0 +1,41 @@
+{
+  "title": "Sparkle Club Tote Bag",
+  "summary": "A sturdy natural cotton tote printed with our confetti and stars design. Big enough for all your craft supplies.",
+  "description": "Printed to order just for you in the UK.\n\n- 100% natural cotton, 38 x 42cm\n- Long handles to carry on the shoulder\n- Printed on demand, so there's no waste",
+  "category": "Sparkle Merch",
+  "price": 14.99,
+  "costPrice": 8.5,
+  "fulfilment": "prodigi",
+  "supplier": {
+    "name": "Prodigi",
+    "productId": "",
+    "sku": "REPLACE-WITH-PRODIGI-TOTE-SKU",
+    "variantId": "",
+    "url": "https://www.prodigi.com/products/",
+    "warehouse": "GB",
+    "assetUrl": "https://sparklebykimberley.co.uk/images/merch/sparkle-club-tote-artwork.png",
+    "attributes": {
+      "color": "natural"
+    }
+  },
+  "variants": [],
+  "deliveryEstimate": "4 to 7 working days",
+  "images": [
+    {
+      "src": "/images/products/sparkle-club-tote-bag-1.jpg",
+      "alt": "Natural cotton tote bag with a colourful confetti and stars print"
+    },
+    {
+      "src": "/images/products/sparkle-club-tote-bag-2.jpg",
+      "alt": "Tote bag full of craft supplies"
+    }
+  ],
+  "childrensItem": false,
+  "ageSuitability": "",
+  "safetyNote": "",
+  "featured": true,
+  "boughtTogether": [
+    "quilling-starter-kit"
+  ],
+  "draft": false
+}
