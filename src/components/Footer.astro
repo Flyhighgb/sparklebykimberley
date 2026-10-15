@@ -46,7 +46,8 @@ const year = new Date().getFullYear();
     </div>
   </div>
   <div class="container legal">
-    <p>© {year} Sparkle by Kimberley. All prices in £ {settings.priceNote}.</p>
+    <p>© {year} Sparkle by Kimberley. All prices in £{settings.priceNote && ` ${settings.priceNote}`}.</p>
+    {sellsOnEtsy && <p class="small">The term "Etsy" is a trademark of Etsy, Inc. This website uses the Etsy API but is not endorsed or certified by Etsy, Inc.</p>}
   </div>
 </footer>
 <style>
@@ -62,5 +63,6 @@ const year = new Date().getFullYear();
   .linkish { background: none; border: 0; padding: 0; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
   .logo-wrap { background: var(--white); display: inline-block; padding: .6rem 1rem; border-radius: var(--radius-sm); margin-bottom: 1rem; }
   .social { display: flex; flex-wrap: wrap; gap: .4rem .9rem; }
+  .legal .small { font-size: .85rem; opacity: .8; }
   .legal { border-top: 1px solid #4a4646; margin-top: 2rem; padding-top: 1rem; font-size: .95rem; }
 </style>
