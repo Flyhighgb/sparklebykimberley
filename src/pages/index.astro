@@ -11,7 +11,8 @@ const latest = tutorials.slice(0, 6);
 const seasonal = settings.seasonal.tutorials
   .map((slug) => tutorials.find((t) => t.id === slug))
   .filter((t): t is NonNullable<typeof t> => Boolean(t));
-const favourites = (await getProducts()).filter((p) => p.data.featured).slice(0, 4);
+// Featured products come first, then the rest.
+const favourites = (await getProducts()).slice(0, 4);
 const orgSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -21,7 +22,7 @@ const orgSchema = {
   sameAs: settings.social.map((s) => s.url),
 };
 ---
-<Base title="Sparkle by Kimberley" description="Free step-by-step paper craft tutorials for grown-ups and little hands, plus a cheerful shop of craft kits, card and printables. Free UK delivery over £30.">
+<Base title="Sparkle by Kimberley" description="Free step-by-step paper craft tutorials for grown-ups and little hands, plus a cheerful shop of craft kits, card and printables.">
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(orgSchema)} />
 
   <section class="hero confetti">

@@ -1,18 +1,21 @@
 ---
 import ProductCard from './ProductCard.astro';
-import { CATEGORIES } from '../content.config';
-import { slugify, type Product } from '../lib/content';
-interface Props { products: Product[]; current?: string }
-const { products, current } = Astro.props;
+import { etsyShopUrl, slugify, type Product } from '../lib/content';
+interface Props { products: Product[]; categories: string[]; current?: string }
+const { products, categories, current } = Astro.props;
 ---
-<nav class="cats" aria-label="Shop categories">
-  <a href="/shop" aria-current={!current ? 'page' : undefined}>Everything</a>
-  {CATEGORIES.map((c) => <a href={`/shop/category/${slugify(c)}`} aria-current={current === c ? 'page' : undefined}>{c}</a>)}
-</nav>
+{categories.length > 1 && (
+  <nav class="cats" aria-label="Shop categories">
+    <a href="/shop" aria-current={!current ? 'page' : undefined}>Everything</a>
+    {categories.map((c) => <a href={`/shop/category/${slugify(c)}`} aria-current={current === c ? 'page' : undefined}>{c}</a>)}
+  </nav>
+)}
 {products.length > 0 ? (
   <div class="grid">{products.map((p) => <ProductCard product={p} />)}</div>
+) : etsyShopUrl ? (
+  <p class="notice">Our shop is getting ready. In the meantime, <a href={etsyShopUrl} target="_blank" rel="noopener">visit us on Etsy</a>.</p>
 ) : (
-  <p class="notice">Lovely new things are on their way to this category. Check back soon, or <a href="/shop">browse everything</a>.</p>
+  <p class="notice">Lovely new things are on their way. Check back soon!</p>
 )}
 <style>
   .cats { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; justify-content: center; }

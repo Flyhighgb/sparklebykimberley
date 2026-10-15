@@ -13,6 +13,6 @@ const attrs = filterable ? { 'data-category': d.category, 'data-search': `${d.ti
     <span class="pill pill--pink">{d.category}</span>
     <h3 class="card__title"><a href={`/shop/${product.id}`}>{d.title}</a></h3>
     <p class="price">{from && 'From '}{gbp(lowestPrice(product))} <small>{settings.priceNote}</small></p>
-    <p class="card__meta">{d.fulfilment === 'digital' ? 'Instant download' : `Delivery ${d.deliveryEstimate}`}</p>
+    <p class="card__meta">{d.fulfilment === 'etsy' ? 'Available on Etsy' : d.fulfilment === 'digital' ? 'Instant download' : d.deliveryEstimate && `Delivery ${d.deliveryEstimate}`}</p>
   </div>
 </article>

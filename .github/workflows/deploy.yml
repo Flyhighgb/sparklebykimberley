@@ -7,6 +7,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    # Every morning, so new or changed Etsy listings appear on the site.
+    - cron: '0 6 * * *'
 
 concurrency:
   group: deploy
@@ -73,6 +76,8 @@ jobs:
         env:
           PUBLIC_API_URL: https://api.sparklebykimberley.co.uk
           PUBLIC_CF_ANALYTICS_TOKEN: ${{ vars.PUBLIC_CF_ANALYTICS_TOKEN }}
+          ETSY_API_KEY: ${{ secrets.ETSY_API_KEY }}
+          ETSY_SHARED_SECRET: ${{ secrets.ETSY_SHARED_SECRET }}
         run: npm run build
 
       - name: Publish the website (Cloudflare Pages)

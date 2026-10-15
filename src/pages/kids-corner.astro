@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import TutorialCard from '../components/TutorialCard.astro';
 import Wave from '../components/Wave.astro';
-import { getTutorials } from '../lib/content';
+import { getTutorials, sellsOnEtsy } from '../lib/content';
 
 const tutorials = (await getTutorials()).filter((t) => t.data.audience !== 'adults');
 const printables = [
@@ -63,7 +63,7 @@ const printables = [
         <li><strong>It doesn't need to be perfect:</strong> praise the effort, not the result. Wonky is wonderful!</li>
       </ul>
       <p><strong>Privacy:</strong> we don't collect any information from children. There are no sign-ups, comments or forms in Kids' Corner, and the printables download straight away with no email needed.</p>
-      <p>Teachers, you're welcome to print our free sheets for your class. Shop kits are UKCA/CE marked and show age guidance on each product page.</p>
+      <p>Teachers, you're welcome to print our free sheets for your class.{!sellsOnEtsy && ' Shop kits are UKCA/CE marked and show age guidance on each product page.'}</p>
     </div>
   </section>
 </Base>

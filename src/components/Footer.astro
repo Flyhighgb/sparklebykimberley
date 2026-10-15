@@ -1,7 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import Wave from './Wave.astro';
-import { settings } from '../lib/content';
+import { etsyShopUrl, sellsOnEtsy, settings } from '../lib/content';
 const year = new Date().getFullYear();
 ---
 <Wave from="var(--blush)" to="var(--charcoal)" />
@@ -31,7 +31,7 @@ const year = new Date().getFullYear();
         <li><a href="/delivery">Delivery information</a></li>
         <li><a href="/returns">Returns &amp; refunds</a></li>
         <li><a href="/terms">Terms &amp; conditions</a></li>
-        <li><a href="/cart">Your basket</a></li>
+        {sellsOnEtsy ? <li><a href={etsyShopUrl} target="_blank" rel="noopener">Our Etsy shop</a></li> : <li><a href="/cart">Your basket</a></li>}
       </ul>
     </div>
     <div>

@@ -1,14 +1,21 @@
 ---
 import Base from '../layouts/Base.astro';
-import { API_URL, settings } from '../lib/content';
+import { API_URL, sellsOnEtsy, settings } from '../lib/content';
+const etsyFaqs = [
+  { q: 'How do I buy something?', a: 'Everything in our shop is sold through our Etsy shop. Click "Buy on Etsy" on any product and you can pay safely with Etsy.' },
+  { q: 'How much is delivery, and how long will it take?', a: 'Postage costs and delivery times are shown on each listing in our Etsy shop before you pay.' },
+  { q: 'Can I return something?', a: "Yes. Returns and refunds for Etsy orders follow the policies shown in our Etsy shop, and your rights under UK consumer law are not affected. Message us on Etsy or here and we'll help." },
+];
 const faqs = [
+  ...(sellsOnEtsy ? etsyFaqs : [
   { q: 'How much is delivery?', a: `UK delivery is £${settings.deliveryFlatRate.toFixed(2)}, and it's free on orders over £${settings.freeDeliveryThreshold}. Printable downloads have no delivery charge.` },
   { q: 'How long will my order take?', a: 'Each product page shows an estimated delivery time, usually 3 to 9 working days. We email your tracking number as soon as each parcel ships.' },
   { q: 'Why did my order arrive in more than one parcel?', a: 'Some items are sent directly from different makers and suppliers. You never pay extra for this.' },
   { q: 'Can I return something?', a: "Yes. You have 14 days from receiving your order to change your mind, under the UK Consumer Contracts Regulations. Faulty items are always replaced or refunded. See our Returns & Refunds page for details." },
   { q: "I haven't received my download link", a: "Download links are emailed straight after payment and work for 7 days. Check your spam or promotions folder first. Still nothing? Send us a message with your order reference and we'll resend it." },
-  { q: 'Can I use the printables in my classroom?', a: 'Absolutely! Free printables are fine for personal and classroom use. Paid printables are for the buyer’s own home or classroom. Please don’t share or resell the files.' },
   { q: 'Are your kids’ kits safe?', a: 'All kids’ kits are UKCA or CE marked and show age guidance and warnings on the product page. Most contain small parts, so they’re not suitable for under-3s. Always supervise young crafters.' },
+  ]),
+  { q: 'Can I use the printables in my classroom?', a: 'Absolutely! Free printables are fine for personal and classroom use. Paid printables are for the buyer’s own home or classroom. Please don’t share or resell the files.' },
   { q: 'Do you collect information about children?', a: 'No. Kids’ Corner has no forms or sign-ups, and our shop and newsletter are for adults only.' },
 ];
 const faqSchema = {

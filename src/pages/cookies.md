@@ -13,10 +13,9 @@ These are needed for the site to work, so they don't need your consent under the
 
 | Name | Type | What it does | How long |
 | --- | --- | --- | --- |
-| `sparkle-cart` | Local storage | Remembers what's in your basket | Until you clear it or check out |
 | `sparkle-consent` | Local storage | Remembers your cookie choices | Until you change them |
 
-When you check out, you're taken to Stripe's secure payment page, which sets its own essential cookies for fraud prevention. See [Stripe's cookie policy](https://stripe.com/gb/legal/cookies-policy).
+When you click **Buy on Etsy**, you go to Etsy's website, which sets its own cookies. See [Etsy's privacy policy](https://www.etsy.com/legal/privacy), which covers its cookies.
 
 ## Optional (only with your OK)
 

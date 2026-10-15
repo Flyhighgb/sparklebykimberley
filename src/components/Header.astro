@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { settings } from '../lib/content';
+import { etsyShopUrl, sellsOnEtsy, settings } from '../lib/content';
 const path = Astro.url.pathname;
 const links = [
   { href: '/tutorials', label: 'Tutorials' },
@@ -11,7 +11,7 @@ const links = [
 ];
 ---
 <div class="announce">
-  <p><span aria-hidden="true">✨</span> {settings.announcement} <span aria-hidden="true">✨</span></p>
+  <p><span aria-hidden="true">✨</span> {sellsOnEtsy ? <a href={etsyShopUrl} target="_blank" rel="noopener">{settings.announcement}</a> : settings.announcement} <span aria-hidden="true">✨</span></p>
 </div>
 <header class="site-header">
   <div class="container bar">
@@ -27,10 +27,12 @@ const links = [
         ))}
       </ul>
     </nav>
-    <a href="/cart" class="cart-link sparkle-hover" aria-label="Your basket">
-      <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 8h14l-1.3 11.1a2 2 0 0 1-2 1.9H8.3a2 2 0 0 1-2-1.9zM9 8V6a3 3 0 0 1 6 0v2"/></svg>
-      <span class="cart-count" data-cart-count hidden>0</span>
-    </a>
+    {!sellsOnEtsy && (
+      <a href="/cart" class="cart-link sparkle-hover" aria-label="Your basket">
+        <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 8h14l-1.3 11.1a2 2 0 0 1-2 1.9H8.3a2 2 0 0 1-2-1.9zM9 8V6a3 3 0 0 1 6 0v2"/></svg>
+        <span class="cart-count" data-cart-count hidden>0</span>
+      </a>
+    )}
   </div>
 </header>
 <script>
@@ -56,6 +58,7 @@ const links = [
 <style>
   .announce { background: var(--charcoal); color: var(--yellow); text-align: center; font-weight: 800; font-size: .95rem; padding: .45rem 1rem; }
   .announce p { margin: 0; }
+  .announce a { color: inherit; }
   .site-header { background: var(--white); border-bottom: 4px dotted var(--turquoise); position: sticky; top: 0; z-index: 50; }
   .bar { display: flex; align-items: center; gap: 1rem; min-height: 72px; }
   nav { margin-left: auto; }

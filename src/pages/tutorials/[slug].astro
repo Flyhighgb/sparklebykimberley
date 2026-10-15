@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import TutorialCard from '../../components/TutorialCard.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
-import { getTutorials, getProducts, audienceLabel, timeLabel, isoDuration, settings } from '../../lib/content';
+import { getTutorials, getProducts, audienceLabel, timeLabel, isoDuration, sellsOnEtsy, settings } from '../../lib/content';
 
 export async function getStaticPaths() {
   const tutorials = await getTutorials();
@@ -165,7 +165,7 @@ const breadcrumbs = {
         <aside class="shop-box" aria-labelledby="shop-this">
           <h2 id="shop-this">Shop this project</h2>
           <div class="shop-list">{shop.map((p) => <ProductCard product={p} />)}</div>
-          <p class="small">Free UK delivery over £{settings.freeDeliveryThreshold}.</p>
+          <p class="small">{sellsOnEtsy ? 'Available from our Etsy shop.' : `Free UK delivery over £${settings.freeDeliveryThreshold}.`}</p>
         </aside>
       )}
     </div>

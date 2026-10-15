@@ -9,3 +9,5 @@ worker/.wrangler/
 worker/node_modules/
 .DS_Store
 .cj-token.json
+# Generated from Etsy on every build
+src/content/products/etsy/
