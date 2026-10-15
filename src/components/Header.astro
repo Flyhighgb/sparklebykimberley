@@ -1,0 +1,76 @@
+---
+import Logo from './Logo.astro';
+import { settings } from '../lib/content';
+const path = Astro.url.pathname;
+const links = [
+  { href: '/tutorials', label: 'Tutorials' },
+  { href: '/kids-corner', label: "Kids' Corner" },
+  { href: '/shop', label: 'Shop' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+<div class="announce">
+  <p><span aria-hidden="true">✨</span> {settings.announcement} <span aria-hidden="true">✨</span></p>
+</div>
+<header class="site-header">
+  <div class="container bar">
+    <Logo />
+    <nav aria-label="Main">
+      <button class="menu-btn" aria-expanded="false" aria-controls="main-menu">
+        <span class="visually-hidden">Menu</span>
+        <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+      </button>
+      <ul id="main-menu">
+        {links.map((l) => (
+          <li><a href={l.href} aria-current={path.startsWith(l.href) ? 'page' : undefined}>{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <a href="/cart" class="cart-link sparkle-hover" aria-label="Your basket">
+      <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 8h14l-1.3 11.1a2 2 0 0 1-2 1.9H8.3a2 2 0 0 1-2-1.9zM9 8V6a3 3 0 0 1 6 0v2"/></svg>
+      <span class="cart-count" data-cart-count hidden>0</span>
+    </a>
+  </div>
+</header>
+<script>
+  import { cartCount } from '../scripts/cart';
+  const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
+  const menu = document.getElementById('main-menu');
+  btn?.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));
+    menu?.classList.toggle('open', !open);
+  });
+  const update = () => {
+    const n = cartCount();
+    document.querySelectorAll<HTMLElement>('[data-cart-count]').forEach((el) => {
+      el.textContent = String(n);
+      el.hidden = n === 0;
+    });
+  };
+  update();
+  window.addEventListener('cart:change', update);
+  window.addEventListener('storage', update);
+</script>
+<style>
+  .announce { background: var(--charcoal); color: var(--yellow); text-align: center; font-weight: 800; font-size: .95rem; padding: .45rem 1rem; }
+  .announce p { margin: 0; }
+  .site-header { background: var(--white); border-bottom: 4px dotted var(--turquoise); position: sticky; top: 0; z-index: 50; }
+  .bar { display: flex; align-items: center; gap: 1rem; min-height: 72px; }
+  nav { margin-left: auto; }
+  ul { list-style: none; margin: 0; padding: 0; display: flex; gap: .3rem; }
+  ul a { display: block; padding: .55rem .85rem; border-radius: 999px; color: var(--charcoal); text-decoration: none; font-weight: 800; }
+  ul a:hover, ul a[aria-current='page'] { background: var(--blush); color: var(--pink-ink); }
+  .menu-btn { display: none; background: none; border: 0; padding: .5rem; color: var(--charcoal); cursor: pointer; min-width: 48px; min-height: 48px; }
+  .cart-link { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%; background: var(--yellow); color: var(--charcoal); border: 2px solid var(--charcoal); }
+  .cart-count { position: absolute; top: -6px; right: -6px; background: var(--pink-ink); color: #fff; font-size: .8rem; font-weight: 800; min-width: 22px; height: 22px; border-radius: 11px; display: grid; place-items: center; padding: 0 5px; }
+  .cart-count[hidden] { display: none; }
+  @media (max-width: 860px) {
+    .menu-btn { display: inline-flex; align-items: center; justify-content: center; }
+    ul { display: none; position: absolute; left: 0; right: 0; top: 100%; background: var(--white); flex-direction: column; padding: .5rem 1rem 1rem; border-bottom: 4px dotted var(--turquoise); }
+    ul.open { display: flex; }
+    ul a { padding: .8rem 1rem; font-size: 1.1rem; }
+    .bar { gap: .5rem; }
+  }
+</style>

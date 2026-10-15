@@ -1,0 +1,19 @@
+---
+import Base from './Base.astro';
+const { frontmatter } = Astro.props;
+---
+<Base title={frontmatter.title} description={frontmatter.description}>
+  <section class="page-hero confetti">
+    <div class="container">
+      <h1>{frontmatter.title}</h1>
+      {frontmatter.updated && <p>Last updated: {frontmatter.updated}</p>}
+    </div>
+  </section>
+  <div class="container legal-body">
+    <div class="prose card-like"><slot /></div>
+  </div>
+</Base>
+<style>
+  .legal-body { padding-bottom: 4rem; }
+  .card-like { background: var(--white); border-radius: var(--radius); padding: clamp(1.4rem, 4vw, 2.6rem); box-shadow: var(--shadow); margin: 0 auto; }
+</style>

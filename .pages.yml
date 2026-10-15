@@ -1,0 +1,172 @@
+# Pages CMS (https://pagescms.org): free, web-based editor for this site.
+# Log in at https://app.pagescms.org with GitHub, pick this repository and you'll
+# see "Tutorials", "Products" and "Site settings" in the menu.
+media:
+  input: public/images
+  output: /images
+
+content:
+  - name: tutorials
+    label: Tutorials
+    type: collection
+    path: src/content/tutorials
+    filename: "{primary}.md"
+    view:
+      fields: [title, audience, difficulty, publishDate, draft]
+      primary: title
+      sort: [publishDate, title]
+      default:
+        sort: publishDate
+        order: desc
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: description, label: "Short description (shown in Google, max 170 characters)", type: text, required: true }
+      - name: audience
+        label: Who is it for?
+        type: select
+        required: true
+        options: { values: [adults, kids, family] }
+      - name: difficulty
+        label: Difficulty
+        type: select
+        required: true
+        options: { values: [Easy, Medium, Tricky] }
+      - { name: timeMinutes, label: Time (minutes), type: number, required: true }
+      - { name: ageRange, label: "Age range (e.g. Ages 4 to 8)", type: string, required: true }
+      - { name: cost, label: "Rough cost (e.g. Under £2)", type: string, required: true }
+      - name: occasions
+        label: Occasions and seasons
+        type: select
+        options:
+          multiple: true
+          values: [any time, birthdays, spring, summer, autumn, winter, christmas, easter, valentines, mothers day, fathers day, halloween, weddings, rainy day, back to school]
+      - name: techniques
+        label: Techniques
+        type: select
+        required: true
+        options:
+          multiple: true
+          values: [origami, quilling, card making, paper flowers, pop-up cards, collage, scrapbooking, paper cutting, garlands]
+      - { name: heroImage, label: Main photo, type: image, required: true }
+      - { name: heroAlt, label: "Main photo description (for blind visitors and Google)", type: string, required: true }
+      - { name: publishDate, label: Publish date, type: date, required: true }
+      - name: materials
+        label: What you'll need
+        type: object
+        list: true
+        fields:
+          - { name: item, label: Item, type: string, required: true }
+          - { name: product, label: "Shop product to link (optional: the product's file name without .json)", type: string }
+      - name: steps
+        label: Steps
+        type: object
+        list: true
+        required: true
+        fields:
+          - { name: title, label: Step title, type: string, required: true }
+          - { name: text, label: What to do, type: text, required: true }
+          - { name: image, label: Step photo, type: image }
+          - { name: alt, label: Photo description, type: string }
+      - { name: video, label: "YouTube video ID (optional: the bit after watch?v=)", type: string }
+      - name: printable
+        label: Free printable template (optional)
+        type: object
+        fields:
+          - { name: file, label: "PDF file (upload it, or e.g. /printables/my-template.pdf)", type: file }
+          - { name: label, label: "Button text (e.g. Crown template, A4 PDF)", type: string }
+      - { name: tips, label: Top tips, type: string, list: true }
+      - { name: safety, label: Safety notes (important for kids' crafts), type: string, list: true }
+      - { name: shopProducts, label: "Shop this project (product file names)", type: string, list: true }
+      - { name: seasonal, label: Seasonal pick, type: boolean, default: false }
+      - { name: draft, label: "Draft (hide from the site)", type: boolean, default: false }
+      - { name: body, label: Introduction, type: rich-text }
+
+  - name: products
+    label: Products
+    type: collection
+    path: src/content/products
+    format: json
+    filename: "{primary}.json"
+    view:
+      fields: [title, category, price, fulfilment, draft]
+      primary: title
+    fields:
+      - { name: title, label: Product name, type: string, required: true }
+      - { name: summary, label: One-line summary, type: text, required: true }
+      - { name: description, label: "Full description (Markdown: - for bullet points)", type: text, required: true }
+      - name: category
+        label: Category
+        type: select
+        required: true
+        options: { values: ["Card & Paper", "Craft Kits (Adults)", "Craft Kits (Kids)", "Tools & Adhesives", "Embellishments", "Printable Downloads", "Sparkle Merch", "Gift Sets"] }
+      - { name: price, label: "Price in £ (including VAT)", type: number, required: true }
+      - { name: costPrice, label: "Your cost price in £ (private, never shown)", type: number }
+      - name: fulfilment
+        label: "Who sends it? (cj = CJdropshipping, prodigi = print on demand, digital = download, manual = you order it by hand)"
+        type: select
+        required: true
+        options: { values: [cj, prodigi, digital, manual] }
+      - name: supplier
+        label: Supplier details
+        type: object
+        fields:
+          - { name: name, label: Supplier name, type: string }
+          - { name: productId, label: Supplier product ID, type: string }
+          - { name: sku, label: Supplier SKU (Prodigi SKU for merch), type: string }
+          - { name: variantId, label: "Supplier variant ID (CJ 'vid')", type: string }
+          - { name: url, label: Supplier product link, type: string }
+          - { name: warehouse, label: "Ships from (country code, e.g. DE, GB, CN)", type: string }
+          - { name: assetUrl, label: "Print artwork link (Prodigi only)", type: string }
+          - { name: downloadKey, label: "Download file name in R2 (digital only, e.g. printables/my-pack.pdf)", type: string }
+      - name: variants
+        label: Options (sizes, colours)
+        type: object
+        list: true
+        fields:
+          - { name: name, label: Option name, type: string, required: true }
+          - { name: sku, label: Supplier SKU, type: string }
+          - { name: variantId, label: Supplier variant ID, type: string }
+          - { name: price, label: "Price in £ (leave blank to use the main price)", type: number }
+      - { name: deliveryEstimate, label: "Estimated delivery (e.g. 5 to 9 working days)", type: string, required: true }
+      - name: images
+        label: Photos
+        type: object
+        list: true
+        required: true
+        fields:
+          - { name: src, label: Photo, type: image, required: true }
+          - { name: alt, label: Photo description, type: string, required: true }
+      - { name: childrensItem, label: "Children's product (shows the safety box)", type: boolean, default: false }
+      - { name: ageSuitability, label: "Age suitability (e.g. Ages 3+ with supervision)", type: string }
+      - { name: safetyNote, label: "Safety note / UKCA-CE warning", type: text }
+      - { name: featured, label: Show in Shop favourites, type: boolean, default: false }
+      - { name: boughtTogether, label: "Frequently bought together (product file names)", type: string, list: true }
+      - { name: draft, label: "Draft (hide from the shop)", type: boolean, default: false }
+
+  - name: settings
+    label: Site settings
+    type: file
+    path: src/data/settings.json
+    format: json
+    fields:
+      - { name: siteName, label: Site name, type: string }
+      - { name: tagline, label: Tagline, type: string }
+      - { name: announcement, label: Announcement bar text, type: string }
+      - { name: deliveryFlatRate, label: "Delivery charge in £ (must match Stripe)", type: number }
+      - { name: freeDeliveryThreshold, label: "Free delivery over £ (must match the Worker setting)", type: number }
+      - { name: priceNote, label: "Price note (e.g. incl. VAT)", type: string }
+      - { name: contactEmail, label: Contact email, type: string }
+      - name: seasonal
+        label: Seasonal spotlight on the home page
+        type: object
+        fields:
+          - { name: title, label: Title, type: string }
+          - { name: text, label: Text, type: text }
+          - { name: tutorials, label: "Tutorials to show (file names without .md)", type: string, list: true }
+      - name: social
+        label: Social links
+        type: object
+        list: true
+        fields:
+          - { name: name, label: Name, type: string }
+          - { name: url, label: Link, type: string }

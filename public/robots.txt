@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /cart
+Disallow: /order-confirmed
+
+Sitemap: https://sparklebykimberley.co.uk/sitemap-index.xml

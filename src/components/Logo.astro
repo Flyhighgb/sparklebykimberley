@@ -1,0 +1,18 @@
+---
+interface Props { size?: 'normal' | 'large' }
+const { size = 'normal' } = Astro.props;
+---
+<a href="/" class:list={['logo', size]} aria-label="Sparkle by Kimberley, home">
+  <span class="script sparkle" aria-hidden="true">Sparkle</span>
+  <span class="by" aria-hidden="true">by Kimberley</span>
+  <svg class="star" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="#FFD23F" stroke="#2B2B2B" stroke-width="1.4" stroke-linejoin="round" d="M12 1.8l2.9 6.6 7.2.7-5.4 4.8 1.6 7.1L12 17.3 5.7 21l1.6-7.1L1.9 9.1l7.2-.7z"/></svg>
+</a>
+<style>
+  .logo { display: inline-flex; align-items: baseline; gap: .35rem; text-decoration: none; color: var(--charcoal); position: relative; padding-right: 1.3rem; line-height: 1; }
+  .sparkle { font-size: 1.85rem; color: var(--pink-ink); }
+  .by { font-weight: 800; font-size: 1.05rem; letter-spacing: .01em; }
+  .star { position: absolute; right: 0; top: -.35rem; transition: transform .4s ease; }
+  .logo:hover .star { transform: rotate(72deg) scale(1.15); }
+  .large .sparkle { font-size: 2.6rem; }
+  .large .by { font-size: 1.4rem; }
+</style>

@@ -1,0 +1,72 @@
+---
+const token = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN || '';
+---
+<div class="cookie-banner" role="dialog" aria-modal="false" aria-labelledby="cookie-title" hidden data-cookie-banner>
+  <div class="inner">
+    <h2 id="cookie-title">A quick word about cookies <span aria-hidden="true">🍪</span></h2>
+    <p>We use essential storage to remember your basket. With your OK we'd also like to count visits (privacy-friendly, no tracking across sites) and show embedded videos. <a href="/cookies">Read our cookie policy</a>.</p>
+    <form class="choices" data-cookie-form>
+      <label class="checkbox"><input type="checkbox" name="analytics" /> <span>Visitor stats (Cloudflare Web Analytics)</span></label>
+      <label class="checkbox"><input type="checkbox" name="media" /> <span>Embedded videos (YouTube)</span></label>
+      <div class="btns">
+        <button type="button" class="btn btn--small" data-accept-all>Accept all</button>
+        <button type="button" class="btn btn--small btn--white" data-reject-all>Essential only</button>
+        <button type="submit" class="btn btn--small btn--white">Save my choices</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script define:vars={{ token }}>
+  window.__CF_TOKEN = token;
+</script>
+<script>
+  import { getConsent, setConsent } from '../scripts/consent';
+  const banner = document.querySelector<HTMLElement>('[data-cookie-banner]')!;
+  const form = banner.querySelector<HTMLFormElement>('[data-cookie-form]')!;
+
+  function loadAnalytics() {
+    const token = (window as any).__CF_TOKEN as string;
+    if (!token || document.getElementById('cf-beacon')) return;
+    const s = document.createElement('script');
+    s.id = 'cf-beacon';
+    s.defer = true;
+    s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+    s.setAttribute('data-cf-beacon', JSON.stringify({ token }));
+    document.head.appendChild(s);
+  }
+  function apply() {
+    const c = getConsent();
+    if (c?.analytics) loadAnalytics();
+  }
+  function show() {
+    const c = getConsent();
+    (form.elements.namedItem('analytics') as HTMLInputElement).checked = !!c?.analytics;
+    (form.elements.namedItem('media') as HTMLInputElement).checked = !!c?.media;
+    banner.hidden = false;
+  }
+  function done(analytics: boolean, media: boolean) {
+    setConsent({ analytics, media });
+    banner.hidden = true;
+    apply();
+  }
+  banner.querySelector('[data-accept-all]')!.addEventListener('click', () => done(true, true));
+  banner.querySelector('[data-reject-all]')!.addEventListener('click', () => done(false, false));
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    done(
+      (form.elements.namedItem('analytics') as HTMLInputElement).checked,
+      (form.elements.namedItem('media') as HTMLInputElement).checked,
+    );
+  });
+  document.querySelectorAll('[data-open-cookie-settings]').forEach((b) => b.addEventListener('click', show));
+  if (!getConsent()) show();
+  apply();
+</script>
+<style>
+  .cookie-banner { position: fixed; left: 1rem; right: 1rem; bottom: 1rem; z-index: 200; display: flex; justify-content: center; }
+  .cookie-banner[hidden] { display: none; }
+  .inner { background: var(--white); border: 3px solid var(--charcoal); border-radius: var(--radius); box-shadow: 6px 6px 0 var(--pink); padding: 1.2rem 1.4rem; max-width: 720px; width: 100%; max-height: 80vh; overflow: auto; }
+  h2 { font-size: 1.2rem; }
+  .choices { display: grid; gap: .5rem; }
+  .btns { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .5rem; }
+</style>

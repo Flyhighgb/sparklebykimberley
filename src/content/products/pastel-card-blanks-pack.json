@@ -1,0 +1,38 @@
+{
+  "title": "Pastel Card Blanks with Envelopes (20 Pack)",
+  "summary": "20 folded A6 card blanks with matching envelopes in five soft pastel shades.",
+  "description": "Sturdy 300gsm folded cards, ready for quilling, stamping or pop-ups.\n\n- 20 A6 cards (10.5 x 14.8cm folded)\n- 20 matching envelopes\n- 5 pastel colours: pink, lemon, mint, sky and lilac",
+  "category": "Card & Paper",
+  "price": 6.99,
+  "costPrice": 2.75,
+  "fulfilment": "manual",
+  "supplier": {
+    "name": "Pound Wholesale",
+    "productId": "",
+    "sku": "PW-SAMPLE-CARD20",
+    "variantId": "",
+    "url": "https://www.poundwholesale.co.uk/",
+    "warehouse": "GB"
+  },
+  "variants": [],
+  "deliveryEstimate": "3 to 5 working days",
+  "images": [
+    {
+      "src": "/images/products/pastel-card-blanks-pack-1.jpg",
+      "alt": "Stack of pastel card blanks with envelopes"
+    },
+    {
+      "src": "/images/products/pastel-card-blanks-pack-2.jpg",
+      "alt": "A pastel card decorated with a quilled flower"
+    }
+  ],
+  "childrensItem": false,
+  "ageSuitability": "All ages",
+  "safetyNote": "",
+  "featured": true,
+  "boughtTogether": [
+    "quilling-starter-kit",
+    "origami-paper-rainbow-pack"
+  ],
+  "draft": false
+}

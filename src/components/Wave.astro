@@ -1,0 +1,10 @@
+---
+/** Wavy section divider. `from` is the colour above, `to` the colour below. */
+interface Props { from?: string; to?: string; flip?: boolean }
+const { from = 'var(--blush)', to = 'var(--white)', flip = false } = Astro.props;
+---
+<div class="wave" aria-hidden="true" style={`background:${from}`}>
+  <svg viewBox="0 0 1440 40" preserveAspectRatio="none" style={flip ? 'transform:scaleX(-1)' : ''}>
+    <path fill={to} d="M0 22c120-18 240-18 360 0s240 18 360 0 240-18 360 0 240 18 360 0v18H0z"/>
+  </svg>
+</div>

@@ -1,0 +1,32 @@
+{
+  "name": "sparkle-by-kimberley",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sparkle by Kimberley: paper craft tutorials and shop",
+  "scripts": {
+    "dev": "astro dev",
+    "prebuild": "node scripts/optimise-images.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "import:cj": "node scripts/import-cj.mjs",
+    "worker:dev": "cd worker && npx wrangler dev",
+    "worker:deploy": "cd worker && npx wrangler deploy"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource/nunito": "^5.3.0",
+    "@fontsource/pacifico": "^5.3.0",
+    "astro": "^5.18.2",
+    "marked": "^18.1.1",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.9.3"
+  }
+}

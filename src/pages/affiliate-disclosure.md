@@ -1,0 +1,14 @@
+---
+layout: ../layouts/Legal.astro
+title: Affiliate Disclosure
+description: How Sparkle by Kimberley may earn commission from some links.
+updated: 15 October 2026
+---
+
+Some tutorials may include links to products sold by other shops. If you click one and buy something, we may earn a small commission at no extra cost to you. It helps keep the tutorials free!
+
+- Affiliate links are marked with **(ad)** or **(affiliate link)**.
+- We only recommend things we've used and genuinely like.
+- Links to the Sparkle Shop are our own products, not affiliate links.
+
+This follows the UK Advertising Standards Authority (ASA) and Competition and Markets Authority (CMA) guidance on clearly labelling ads.

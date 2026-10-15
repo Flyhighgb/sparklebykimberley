@@ -1,0 +1,33 @@
+{
+  "title": "Printable Birthday Card Bundle",
+  "summary": "Ten colourful birthday card designs to print at home, plus a pop-up cake insert. Instant download.",
+  "description": "Print as many as you like for personal use.\n\n- 10 A5 folded card designs (PDF)\n- Pop-up cake insert template\n- Matching gift tags\n- Prints perfectly on A4 card at home\n\nYou'll get a download link by email straight after paying. The link works for 7 days.",
+  "category": "Printable Downloads",
+  "price": 3.99,
+  "costPrice": 0,
+  "fulfilment": "digital",
+  "supplier": {
+    "name": "Digital",
+    "downloadKey": "printables/birthday-card-bundle.zip"
+  },
+  "variants": [],
+  "deliveryEstimate": "Instant download",
+  "images": [
+    {
+      "src": "/images/products/printable-birthday-card-bundle-1.jpg",
+      "alt": "Printed birthday cards from the bundle spread out on a table"
+    },
+    {
+      "src": "/images/products/printable-birthday-card-bundle-2.jpg",
+      "alt": "Pop-up cake insert from the bundle"
+    }
+  ],
+  "childrensItem": false,
+  "ageSuitability": "",
+  "safetyNote": "",
+  "featured": false,
+  "boughtTogether": [
+    "pastel-card-blanks-pack"
+  ],
+  "draft": false
+}

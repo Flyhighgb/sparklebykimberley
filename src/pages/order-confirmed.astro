@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import { API_URL } from '../lib/content';
+---
+<Base title="Thank you for your order" description="Your Sparkle by Kimberley order is confirmed." noindex>
+  <section class="container thanks confetti">
+    <span class="script big" aria-hidden="true">Yay!</span>
+    <h1>Thank you for your order!</h1>
+    <p class="lead">Your payment went through and your order is on its way to being packed with sparkle.</p>
+    <div class="box" data-order-box hidden>
+      <h2>Your order</h2>
+      <ul data-order-items></ul>
+      <p data-order-email></p>
+    </div>
+    <div class="next">
+      <h2>What happens next?</h2>
+      <ul>
+        <li><strong>Confirmation email:</strong> it's on its way to your inbox now. Do check your spam folder too.</li>
+        <li><strong>Printable downloads:</strong> your download links are in that email and work for 7 days.</li>
+        <li><strong>Physical items:</strong> we'll email your tracking number as soon as each parcel ships. Some items come from different places, so they may arrive separately.</li>
+      </ul>
+      <p>Any questions? <a href="/contact">Get in touch</a> and quote your order reference.</p>
+      <a class="btn sparkle-hover" href="/tutorials">Find something to make</a>
+    </div>
+  </section>
+</Base>
+<script define:vars={{ api: API_URL }}>
+  window.__API = api;
+</script>
+<script>
+  import { clearCart } from '../scripts/cart';
+  clearCart();
+  const id = new URLSearchParams(location.search).get('session_id');
+  if (id && /^cs_[A-Za-z0-9_]+$/.test(id)) {
+    fetch(`${(window as any).__API}/api/order-status?session_id=${encodeURIComponent(id)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((o: null | { reference: string; email: string; items: { title: string; quantity: number }[] }) => {
+        if (!o) return;
+        const box = document.querySelector<HTMLElement>('[data-order-box]')!;
+        const ul = box.querySelector('[data-order-items]')!;
+        o.items.forEach((i) => {
+          const li = document.createElement('li');
+          li.textContent = `${i.quantity} × ${i.title}`;
+          ul.appendChild(li);
+        });
+        box.querySelector('[data-order-email]')!.textContent = `Order reference ${o.reference}. Confirmation sent to ${o.email}.`;
+        box.hidden = false;
+      })
+      .catch(() => {});
+  }
+</script>
+<style>
+  .thanks { padding: 3rem 1rem 4rem; text-align: center; max-width: 760px; }
+  .big { font-size: 3rem; color: var(--pink-ink); }
+  .lead { font-size: 1.2rem; }
+  .box, .next { background: var(--white); border-radius: var(--radius); padding: 1.4rem; text-align: left; margin-top: 1.5rem; box-shadow: var(--shadow); }
+  .box { border: 3px solid var(--turquoise); }
+</style>

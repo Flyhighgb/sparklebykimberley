@@ -1,0 +1,18 @@
+---
+import type { Product } from '../lib/content';
+import { gbp, lowestPrice, settings } from '../lib/content';
+interface Props { product: Product; filterable?: boolean }
+const { product, filterable = false } = Astro.props;
+const d = product.data;
+const from = d.variants.length > 1 && d.variants.some((v) => v.price && v.price !== d.price);
+const attrs = filterable ? { 'data-category': d.category, 'data-search': `${d.title} ${d.summary}`.toLowerCase() } : {};
+---
+<article class="card pcard" {...attrs}>
+  <img class="card__img" src={d.images[0].src} alt={d.images[0].alt} width="800" height="600" loading="lazy" decoding="async" />
+  <div class="card__body">
+    <span class="pill pill--pink">{d.category}</span>
+    <h3 class="card__title"><a href={`/shop/${product.id}`}>{d.title}</a></h3>
+    <p class="price">{from && 'From '}{gbp(lowestPrice(product))} <small>{settings.priceNote}</small></p>
+    <p class="card__meta">{d.fulfilment === 'digital' ? 'Instant download' : `Delivery ${d.deliveryEstimate}`}</p>
+  </div>
+</article>
