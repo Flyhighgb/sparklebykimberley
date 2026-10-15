@@ -1,0 +1,89 @@
+# Deploys everything to Cloudflare whenever main changes (or when you press "Run workflow").
+# Before the first run, add the secrets listed in the README ("Automatic deploy") under
+# GitHub > Settings > Secrets and variables > Actions.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+  WRANGLER_SEND_METRICS: 'false'
+  HAS_STRIPE: ${{ secrets.STRIPE_SECRET_KEY != '' }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            worker/package-lock.json
+
+      - name: Install
+        run: |
+          npm ci
+          npm ci --prefix worker
+
+      - name: Check Cloudflare account and domain
+        run: node scripts/deploy/preflight.mjs
+
+      - name: Create database and download bucket (first run only)
+        run: node scripts/deploy/worker-setup.mjs
+
+      - name: Deploy the order Worker
+        working-directory: worker
+        run: npx wrangler deploy
+
+      - name: Set up Stripe delivery rates and webhook
+        if: env.HAS_STRIPE == 'true'
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+        run: node scripts/deploy/setup-stripe.mjs "$RUNNER_TEMP/stripe.json"
+
+      - name: Save keys as Worker secrets
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          CJ_API_KEY: ${{ secrets.CJ_API_KEY }}
+          PRODIGI_API_KEY: ${{ secrets.PRODIGI_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+        run: |
+          [ -f "$RUNNER_TEMP/stripe.json" ] || echo '{}' > "$RUNNER_TEMP/stripe.json"
+          node scripts/deploy/worker-secrets.mjs "$RUNNER_TEMP/stripe.json"
+          rm -f "$RUNNER_TEMP/stripe.json"
+
+      - name: Build the website
+        env:
+          PUBLIC_API_URL: https://api.sparklebykimberley.co.uk
+          PUBLIC_CF_ANALYTICS_TOKEN: ${{ vars.PUBLIC_CF_ANALYTICS_TOKEN }}
+        run: npm run build
+
+      - name: Publish the website (Cloudflare Pages)
+        run: |
+          worker/node_modules/.bin/wrangler pages project create sparkle-by-kimberley --production-branch main 2>/dev/null || true
+          worker/node_modules/.bin/wrangler pages deploy dist --project-name sparkle-by-kimberley --branch main --commit-dirty=true
+
+      - name: Connect sparklebykimberley.co.uk
+        run: node scripts/deploy/pages-domain.mjs
+
+      - name: Set up the email sending domain (Resend)
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: node scripts/deploy/resend-domain.mjs

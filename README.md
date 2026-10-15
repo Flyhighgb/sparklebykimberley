@@ -29,12 +29,42 @@ public/images/           photos (placeholders for now: swap in your own)
 public/printables/       free PDF templates
 worker/                  the order Worker (checkout, suppliers, emails, admin page)
 scripts/import-cj.mjs    imports products from CJdropshipping
+scripts/deploy/          the automatic deploy steps (run by .github/workflows/deploy.yml)
 .pages.yml               set-up for the Pages CMS editor
 ```
 
 ---
 
-## 1. Deploying (one-off set-up)
+## 1. Deploying
+
+There are two ways to deploy. **The automatic way is recommended.** You create the accounts and copy a few keys into GitHub, and GitHub sets up and publishes everything else. That includes the database, the download bucket, the order Worker, Stripe's delivery rates and webhook, the website, the domain and the email DNS records. It redeploys every time `main` changes.
+
+### Automatic deploy (recommended)
+
+**Step 1: put the domain on Cloudflare** (see 1a below). The deploy stops with a clear message until the domain shows as *Active* in Cloudflare.
+
+**Step 2: create the accounts and copy the keys.** All of these accounts are free to open.
+
+| GitHub secret name | Where to get it |
+| --- | --- |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare dashboard → your domain → right-hand column, "Account ID" |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare → My Profile → API Tokens → **Create Token** → **Create Custom Token**. Give it these permissions: Account › *Cloudflare Pages* Edit, Account › *Workers Scripts* Edit, Account › *D1* Edit, Account › *Workers R2 Storage* Edit, Account › *Account Settings* Read, Zone › *Zone* Read, Zone › *DNS* Edit, Zone › *Workers Routes* Edit. Set Zone Resources to sparklebykimberley.co.uk. |
+| `STRIPE_SECRET_KEY` | Stripe → Developers → API keys → Secret key. Start with the `sk_test_…` key. |
+| `ADMIN_PASSWORD` | Make one up (at least 10 characters). It's the password for the orders admin page. |
+| `RESEND_API_KEY` | Resend → API Keys → Create, with **Full access** so it can set up the domain for you. |
+| `RESEND_AUDIENCE_ID` | Optional. Resend → Audiences → create "Sparkle Club" and copy its ID. |
+| `CJ_API_KEY` | CJdropshipping → My CJ → Authorization → API |
+| `PRODIGI_API_KEY` | Prodigi dashboard → Settings → API. Use the sandbox key while testing. |
+
+**Step 3: add them to GitHub.** In the repository go to **Settings → Secrets and variables → Actions → New repository secret** and add each one with the exact name above. Optionally, add a *variable* (Variables tab) called `PUBLIC_CF_ANALYTICS_TOKEN` for Cloudflare Web Analytics.
+
+**Step 4: run it.** Go to **Actions → Deploy → Run workflow**. Every step has a plain-English name, and if something's missing it tells you what. When it's green, the site is live at https://sparklebykimberley.co.uk and the admin page at https://api.sparklebykimberley.co.uk/admin.
+
+Keys can be added later: just add the secret and run the workflow again. To go live with real payments, replace `STRIPE_SECRET_KEY` with your `sk_live_…` key, set `PRODIGI_ENV = "live"` in `worker/wrangler.toml`, and run it again. The live webhook is created for you.
+
+Then do the test purchase in step 1f.
+
+### Manual deploy (if you'd rather do it by hand)
 
 You'll need free accounts at GitHub, Cloudflare, Stripe, Resend, CJdropshipping and Prodigi, and Node.js 20+ on your computer for the first set-up.
 
