@@ -18,11 +18,13 @@ export const digital: SupplierAdapter = {
 
   async submit({ env, order, lines, products }) {
     if (!env.DOWNLOAD_SIGNING_SECRET) throw new Error('DOWNLOAD_SIGNING_SECRET secret is not set');
+    const bucket = env.DOWNLOADS;
+    if (!bucket) throw new Error('R2 storage is not switched on in Cloudflare yet, so downloads cannot be sent');
     const links: { title: string; url: string }[] = [];
     for (const l of lines) {
       const key = products.get(l.product_id)?.supplier.downloadKey;
       if (!key) throw new Error(`No download file set for "${l.title}"`);
-      const exists = await env.DOWNLOADS.head(key);
+      const exists = await bucket.head(key);
       if (!exists) throw new Error(`Download file "${key}" is missing from the R2 bucket`);
       links.push({ title: l.title, url: await signedDownloadUrl(env, key, order.id) });
     }

@@ -56,6 +56,8 @@ There are two ways to deploy. **The automatic way is recommended.** You create t
 | `CJ_API_KEY` | CJdropshipping → My CJ → Authorization → API |
 | `PRODIGI_API_KEY` | Prodigi dashboard → Settings → API. Use the sandbox key while testing. |
 
+**Switch on R2 (for paid printable downloads).** In Cloudflare, open **R2 Object Storage** and switch it on. Cloudflare asks for a card, but the free tier (10 GB) costs £0. Until R2 is on, the deploy still works, but paid downloads show as failed on the admin page.
+
 **Step 3: add them to GitHub.** In the repository go to **Settings → Secrets and variables → Actions → New repository secret** and add each one with the exact name above. Optionally, add a *variable* (Variables tab) called `PUBLIC_CF_ANALYTICS_TOKEN` for Cloudflare Web Analytics.
 
 **Step 4: run it.** Go to **Actions → Deploy → Run workflow**. Every step has a plain-English name, and if something's missing it tells you what. When it's green, the site is live at https://sparklebykimberley.co.uk and the admin page at https://api.sparklebykimberley.co.uk/admin.

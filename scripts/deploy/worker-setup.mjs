@@ -21,9 +21,20 @@ console.log(`✔ D1 database ${DB} (${db.uuid})`);
 wrangler(['d1', 'execute', DB, '--remote', '--file=schema.sql', '--yes']);
 console.log('✔ Order tables are in place');
 
-const buckets = wrangler(['r2', 'bucket', 'list'], { quiet: true });
-if (!new RegExp(`\\b${BUCKET}\\b`).test(buckets)) {
-  console.log(`Creating R2 bucket ${BUCKET}…`);
-  wrangler(['r2', 'bucket', 'create', BUCKET]);
+let buckets = null;
+try {
+  buckets = wrangler(['r2', 'bucket', 'list'], { quiet: true });
+} catch (e) {
+  if (!/10042|enable R2/i.test(`${e.stderr || ''}${e.message}`)) throw e;
+  // R2 isn't switched on for this Cloudflare account yet. Deploy without it for now;
+  // paid printable downloads will show as failed on the admin page until it's on.
+  console.log('::warning::R2 storage isn\'t switched on in Cloudflare yet, so paid printable downloads won\'t work. In Cloudflare open R2 Object Storage and click "Purchase R2 Plan" (the free tier costs £0), then run this deploy again.');
+  fs.writeFileSync('worker/wrangler.toml', fs.readFileSync('worker/wrangler.toml', 'utf8').replace(/\[\[r2_buckets\]\][^[]*/, ''));
 }
-console.log(`✔ R2 bucket ${BUCKET}`);
+if (buckets !== null) {
+  if (!new RegExp(`\\b${BUCKET}\\b`).test(buckets)) {
+    console.log(`Creating R2 bucket ${BUCKET}…`);
+    wrangler(['r2', 'bucket', 'create', BUCKET]);
+  }
+  console.log(`✔ R2 bucket ${BUCKET}`);
+}

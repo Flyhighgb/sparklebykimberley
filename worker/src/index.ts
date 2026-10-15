@@ -154,6 +154,7 @@ async function download(url: URL, env: Env): Promise<Response> {
   const expected = await hmacHex(env.DOWNLOAD_SIGNING_SECRET, `${k}|${o}|${e}`);
   if (!safeEqual(s, expected)) return page('This download link is not valid.', 403);
   if (Date.now() / 1000 > e) return page('This download link has expired.', 410);
+  if (!env.DOWNLOADS) return page('Downloads are not available just now.', 503);
   const obj = await env.DOWNLOADS.get(k);
   if (!obj) return page('We could not find that file.', 404);
   const filename = k.split('/').pop() || 'download';
