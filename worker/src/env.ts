@@ -1,6 +1,7 @@
 export interface Env {
   DB: D1Database;
-  DOWNLOADS: R2Bucket;
+  /** Missing until R2 is switched on in the Cloudflare account. */
+  DOWNLOADS?: R2Bucket;
 
   // Plain settings (wrangler.toml [vars])
   SITE_URL: string;
