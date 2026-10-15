@@ -6,11 +6,12 @@
   "description": "Sparkle by Kimberley: paper craft tutorials and shop",
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "node scripts/optimise-images.mjs",
+    "prebuild": "node scripts/import-etsy.mjs && node scripts/optimise-images.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
     "import:cj": "node scripts/import-cj.mjs",
+    "import:etsy": "node scripts/import-etsy.mjs",
     "worker:dev": "cd worker && npx wrangler dev",
     "worker:deploy": "cd worker && npx wrangler deploy"
   },

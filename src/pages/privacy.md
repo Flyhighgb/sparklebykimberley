@@ -13,13 +13,13 @@ This policy explains what personal information Sparkle by Kimberley ("we", "us")
 
 | What | Why | Lawful basis |
 | --- | --- | --- |
-| Name, email, phone, delivery address and order details when you buy | To take payment, send your order and keep you updated | Contract |
+| Name, delivery address and order details that Etsy shares with us when you buy from our Etsy shop | To send your order and keep you updated | Contract |
 | Your email (and first name, if given) when you join the Sparkle Club | To send our monthly newsletter and free printables | Consent |
 | Your name, email and message when you use the contact form | To reply to you | Legitimate interests |
 | Anonymous visit statistics (only if you agree) | To understand which pages are popular | Consent |
 | Order and tax records | Because UK tax law requires it | Legal obligation |
 
-We **never** see or store your card details. Payments are handled by Stripe.
+We **never** see your card details. When you buy, you check out on Etsy, which handles your payment under [Etsy's privacy policy](https://www.etsy.com/legal/privacy).
 
 ## Children
 
@@ -29,8 +29,8 @@ Our tutorials are for everyone, but our forms and shop are for adults. **We do n
 
 We only share what's needed to run the shop, with companies that protect it properly:
 
-- **Stripe** (payments)
-- **Our suppliers**, who post your order directly to you: CJdropshipping, Prodigi and UK wholesalers. They receive your name, delivery address, phone number and the items ordered. Some suppliers are outside the UK (for example in the EU or China); where that happens, transfers are protected by the UK International Data Transfer Addendum or equivalent safeguards.
+- **Etsy** (our shop, payments and order messages)
+- **Royal Mail or other delivery services**, who receive your name and address to deliver your parcel
 - **Resend** (sending emails)
 - **Cloudflare** (website hosting, security and, if you agree, privacy-friendly visit statistics)
 

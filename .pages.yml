@@ -1,6 +1,7 @@
 # Pages CMS (https://pagescms.org): free, web-based editor for this site.
 # Log in at https://app.pagescms.org with GitHub, pick this repository and you'll
 # see "Tutorials", "Products" and "Site settings" in the menu.
+# Products from the Etsy shop are pulled in automatically on every deploy and don't appear here.
 media:
   input: public/images
   output: /images
@@ -102,10 +103,11 @@ content:
       - { name: price, label: "Price in £ (including VAT)", type: number, required: true }
       - { name: costPrice, label: "Your cost price in £ (private, never shown)", type: number }
       - name: fulfilment
-        label: "Who sends it? (cj = CJdropshipping, prodigi = print on demand, digital = download, manual = you order it by hand)"
+        label: "How is it sold? (etsy = Buy on Etsy button, cj = CJdropshipping, prodigi = print on demand, digital = download, manual = you order it by hand)"
         type: select
         required: true
-        options: { values: [cj, prodigi, digital, manual] }
+        options: { values: [etsy, cj, prodigi, digital, manual] }
+      - { name: etsyUrl, label: "Etsy listing link (for etsy products)", type: string }
       - name: supplier
         label: Supplier details
         type: object
@@ -127,7 +129,7 @@ content:
           - { name: sku, label: Supplier SKU, type: string }
           - { name: variantId, label: Supplier variant ID, type: string }
           - { name: price, label: "Price in £ (leave blank to use the main price)", type: number }
-      - { name: deliveryEstimate, label: "Estimated delivery (e.g. 5 to 9 working days)", type: string, required: true }
+      - { name: deliveryEstimate, label: "Estimated delivery (e.g. 5 to 9 working days)", type: string }
       - name: images
         label: Photos
         type: object
@@ -151,6 +153,7 @@ content:
     fields:
       - { name: siteName, label: Site name, type: string }
       - { name: tagline, label: Tagline, type: string }
+      - { name: etsyShop, label: "Etsy shop name (shop products come from here; leave blank to use the basket and Stripe instead)", type: string }
       - { name: announcement, label: Announcement bar text, type: string }
       - { name: deliveryFlatRate, label: "Delivery charge in £ (must match Stripe)", type: number }
       - { name: freeDeliveryThreshold, label: "Free delivery over £ (must match the Worker setting)", type: number }

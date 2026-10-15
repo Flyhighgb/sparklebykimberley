@@ -1,41 +1,20 @@
 ---
 layout: ../layouts/Legal.astro
 title: Delivery Information
-description: UK delivery costs, times and tracking for Sparkle by Kimberley orders. Free UK delivery over £30.
+description: How delivery works for Sparkle by Kimberley products, which are sold through our Etsy shop.
 updated: 15 October 2026
 ---
 
-## Delivery costs
+Everything in the Sparkle shop is sold through our [Etsy shop](https://www.etsy.com/uk/shop/SparkleByKimberley). When you click **Buy on Etsy**, you check out securely on Etsy.
 
-- **£3.49** flat-rate UK delivery
-- **Free UK delivery** on orders over £30
-- **Printable downloads** are free to deliver: they're emailed straight away
+## Delivery costs and times
 
-We currently deliver to UK addresses only.
-
-## Delivery times
-
-Each product page shows its own estimated delivery time. As a guide:
-
-| Item type | Estimated delivery |
-| --- | --- |
-| Printable downloads | Instant |
-| Sparkle merch (printed to order in the UK) | 4 to 7 working days |
-| UK-stocked kits and card | 3 to 5 working days |
-| Supplies sent from our European partner warehouse | 5 to 9 working days |
-
-## Why might my items arrive separately?
-
-We work with a few different makers and suppliers so we can offer lots of lovely things without waste. If your order includes items from more than one, they'll arrive in separate parcels. You won't pay extra.
+Each Etsy listing shows its postage cost, where it ships to and the estimated delivery time before you pay.
 
 ## Tracking
 
-We'll email you a tracking number as soon as each parcel ships.
-
-## Customs
-
-You shouldn't have anything extra to pay on the doorstep. If a courier ever asks you for a fee, don't pay it: [contact us](/contact) and we'll sort it out.
+Etsy emails you when your order is dispatched, with tracking details when the delivery service provides them. You can also see your order under **Purchases** in your Etsy account.
 
 ## Something wrong?
 
-If your parcel hasn't arrived within 5 working days of the latest estimate, [contact us](/contact) and we'll sort it out.
+If your parcel is late or hasn't arrived, message us on Etsy or [contact us here](/contact) and we'll sort it out.

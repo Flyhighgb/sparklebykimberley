@@ -1,10 +1,15 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import settings from '../data/settings.json';
+import { CATEGORIES } from '../content.config';
 
 export type Tutorial = CollectionEntry<'tutorials'>;
 export type Product = CollectionEntry<'products'>;
 
 export { settings };
+
+/** When an Etsy shop is set, products are bought on Etsy and the basket and checkout are hidden. */
+export const etsyShopUrl = settings.etsyShop ? `https://www.etsy.com/uk/shop/${settings.etsyShop}` : '';
+export const sellsOnEtsy = Boolean(etsyShopUrl);
 
 export const API_URL = (import.meta.env.PUBLIC_API_URL || 'https://api.sparklebykimberley.co.uk').replace(/\/$/, '');
 
@@ -16,6 +21,12 @@ export async function getTutorials(): Promise<Tutorial[]> {
 export async function getProducts(): Promise<Product[]> {
   const all = await getCollection('products', ({ data }) => !data.draft);
   return all.sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || a.data.title.localeCompare(b.data.title));
+}
+
+/** Category names in shop order: the standard ones first, then any others (such as Etsy sections). */
+export function shopCategories(products: Product[]): string[] {
+  const used = new Set(products.map((p) => p.data.category));
+  return [...CATEGORIES.filter((c) => used.has(c)), ...[...used].filter((c) => !(CATEGORIES as readonly string[]).includes(c)).sort()];
 }
 
 export function gbp(amount: number): string {

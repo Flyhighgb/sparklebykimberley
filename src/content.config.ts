@@ -42,7 +42,7 @@ export const CATEGORIES = [
   'Sparkle Merch',
   'Gift Sets',
 ] as const;
-export const FULFILMENT = ['cj', 'prodigi', 'digital', 'manual'] as const;
+export const FULFILMENT = ['etsy', 'cj', 'prodigi', 'digital', 'manual'] as const;
 
 // The CMS can save empty optional fields as null or "", so be forgiving with those.
 const optStr = z.string().nullish().transform((v) => v || '');
@@ -85,15 +85,22 @@ const tutorials = defineCollection({
 });
 
 const products = defineCollection({
-  loader: glob({ pattern: '**/*.json', base: './src/content/products' }),
+  // Etsy listings live in an etsy/ subfolder; use just the file name so their pages are /shop/<name>.
+  loader: glob({
+    pattern: '**/*.json',
+    base: './src/content/products',
+    generateId: ({ entry }) => entry.replace(/\.json$/, '').split('/').pop()!,
+  }),
   schema: z.object({
     title: z.string(),
     summary: z.string(),
     description: z.string(),
-    category: z.enum(CATEGORIES),
+    // Etsy listings use the shop's own section names, so any category is allowed.
+    category: z.string(),
     price: z.number().positive(),
     costPrice: z.number().nonnegative().nullish().transform((v) => v ?? 0),
-    fulfilment: z.enum(FULFILMENT),
+    fulfilment: z.enum(FULFILMENT).nullish().transform((v) => v ?? 'manual'),
+    etsyUrl: optStr,
     supplier: z
       .object({
         name: optStr,
@@ -116,7 +123,7 @@ const products = defineCollection({
         price: z.number().positive().nullish().transform((v) => v ?? undefined),
       }),
     ),
-    deliveryEstimate: z.string(),
+    deliveryEstimate: optStr,
     images: z.array(z.object({ src: z.string(), alt: z.string() })).min(1),
     childrensItem: z.boolean().nullish().transform(Boolean),
     ageSuitability: optStr,

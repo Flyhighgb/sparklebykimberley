@@ -1,29 +1,16 @@
 ---
 layout: ../layouts/Legal.astro
 title: Returns & Refunds
-description: Your 14-day right to cancel under the UK Consumer Contracts Regulations, plus how to return faulty items.
+description: How returns and refunds work for Sparkle by Kimberley products bought through our Etsy shop.
 updated: 15 October 2026
 ---
 
-We want you to love your order. If you don't, here's what you can do.
+We want you to love your order. Our products are sold through our [Etsy shop](https://www.etsy.com/uk/shop/SparkleByKimberley), so returns and refunds follow the return policy shown on each Etsy listing.
 
-## Changed your mind? You have 14 days
+## Changed your mind?
 
-Under the **Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013**, you can cancel your order for any reason within **14 days of receiving it**.
-
-1. Tell us within 14 days by emailing [hello@sparklebykimberley.co.uk](mailto:hello@sparklebykimberley.co.uk) with your order reference. A simple "I'd like to cancel" is fine.
-2. We'll reply with the return address. Please send the items back within 14 days of telling us.
-3. Items should be unused and in their original packaging where possible.
-4. We'll refund you within 14 days of getting the items back (or proof you've sent them), including the standard delivery cost you paid. Refunds go back to your original payment method.
-
-You pay the cost of returning items unless they're faulty or we sent the wrong thing.
-
-### Exceptions
-
-- **Printable downloads:** once your download link has been sent, the right to cancel no longer applies, because you agreed to receive the files straight away.
-- **Personalised or made-to-order items** (such as custom merch printed with your name) can't be returned unless they're faulty.
-- **Opened craft supplies that can't be returned for hygiene reasons** (such as opened glue) can't be returned unless faulty.
+If you're in the UK, you usually have **14 days from receiving your order** to cancel under the Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013. Personalised or made-to-order items and digital downloads are exceptions. Message us on Etsy to start a return.
 
 ## Faulty, damaged or wrong item?
 
-We're so sorry! Email us a photo within 30 days and we'll send a replacement or a full refund, including return postage. Your rights under the Consumer Rights Act 2015 are not affected.
+We're so sorry! Message us on Etsy or [contact us here](/contact) with a photo and we'll put it right with a replacement or a refund. Your rights under the Consumer Rights Act 2015 are not affected.

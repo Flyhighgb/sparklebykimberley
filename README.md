@@ -49,7 +49,9 @@ There are two ways to deploy. **The automatic way is recommended.** You create t
 | --- | --- |
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare dashboard → your domain → right-hand column, "Account ID" |
 | `CLOUDFLARE_API_TOKEN` | Cloudflare → My Profile → API Tokens → **Create Token** → **Create Custom Token**. Give it these permissions: Account › *Cloudflare Pages* Edit, Account › *Workers Scripts* Edit, Account › *D1* Edit, Account › *Workers R2 Storage* Edit, Account › *Account Settings* Read, Zone › *Zone* Read, Zone › *DNS* Edit, Zone › *Workers Routes* Edit. Set Zone Resources to sparklebykimberley.co.uk. |
-| `STRIPE_SECRET_KEY` | Stripe → Developers → API keys → Secret key. Start with the `sk_test_…` key. |
+| `ETSY_API_KEY` | Etsy developers page (etsy.com/developers) → **Create a new app** → copy the **Keystring**. See section 3. |
+| `ETSY_SHARED_SECRET` | Same Etsy app page → **Shared secret**. |
+| `STRIPE_SECRET_KEY` | Only if you sell with the basket instead of Etsy. Stripe → Developers → API keys → Secret key. Start with the `sk_test_…` key. |
 | `ADMIN_PASSWORD` | Make one up (at least 10 characters). It's the password for the orders admin page. |
 | `RESEND_API_KEY` | Resend → API Keys → Create, with **Full access** so it can set up the domain for you. |
 | `RESEND_AUDIENCE_ID` | Optional. Resend → Audiences → create "Sparkle Club" and copy its ID. |
@@ -165,7 +167,20 @@ Tips: photos are shrunk automatically, but square-ish 4:3 landscape photos look 
 
 **The hands-on way:** copy any file in `src/content/tutorials/`, rename it (the file name becomes the web address, e.g. `easy-paper-flowers-for-kids.md` → `/tutorials/easy-paper-flowers-for-kids`), and edit it.
 
-## 3. Adding a product by hand
+## 3. Your Etsy shop
+
+The shop shows the live listings from the Etsy shop named in **Site settings → Etsy shop name** (`SparkleByKimberley`). Every deploy, and every morning at 6am, the site pulls each active listing's title, description, photos, price and shop section, and its product page gets a **Buy on Etsy** button. The basket and Stripe checkout are hidden while an Etsy shop name is set. Clear the name to switch back to them.
+
+To connect it, the site needs an Etsy API key:
+
+1. Go to https://www.etsy.com/developers/register while signed in to the Etsy account that owns the shop, and create an app (any name, e.g. "Sparkle website").
+2. Copy the **Keystring** into the GitHub secret `ETSY_API_KEY` and the **Shared secret** into `ETSY_SHARED_SECRET`.
+3. Etsy may take a little while to approve a new app. Until then the deploy carries on and the shop shows "coming soon".
+4. Run **Actions → Deploy → Run workflow**.
+
+To change a product on the website, change it on Etsy. Your Etsy shop sections become the website's shop categories, and listings you feature on Etsy appear in **Shop favourites** on the home page.
+
+## 3b. Adding a product by hand
 
 In Pages CMS click **Products → Add an entry**, or copy a file in `src/content/products/`.
 
@@ -173,6 +188,7 @@ The most important box is **Who sends it?** (`fulfilment`):
 
 | Value | What happens when it's bought | What to fill in |
 | --- | --- | --- |
+| `etsy` | The product page shows a **Buy on Etsy** button | The Etsy listing link |
 | `cj` | Order is created at CJdropshipping automatically | CJ variant ID (`vid`), warehouse (`DE` for Germany) |
 | `prodigi` | Order is created at Prodigi automatically | Prodigi SKU (from the Prodigi product catalogue) and a link to your full-size print artwork (`assetUrl`) |
 | `digital` | Customer is emailed a download link that works for 7 days | Download file name in R2, e.g. `printables/my-pack.pdf` |
@@ -182,7 +198,6 @@ Also fill in price (in £, including VAT), your cost price (never shown to custo
 
 **Uploading a printable for sale:** in Cloudflare open **R2 → sparkle-downloads → Upload**, put the file in a `printables/` folder, and use that name (e.g. `printables/my-pack.pdf`) as the download file name.
 
-> The 8 starter products use **sample supplier IDs**. Before selling them for real, replace them with real CJ products (section 4), a real Prodigi SKU and artwork for the tote bag, real Pound Wholesale SKUs, and upload the two printable packs to R2. Until then those orders will show as failed on the admin page.
 
 ## 4. Importing dropship products from CJdropshipping
 
