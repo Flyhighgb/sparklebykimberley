@@ -13,12 +13,15 @@ heroAlt: A paper plate rainbow with bright tissue paper stripes and cotton wool 
 publishDate: 2026-09-28
 materials:
   - item: One paper plate
+    link: https://www.amazon.co.uk/s?k=white+paper+plates
   - item: Tissue paper in rainbow colours
-    product: kids-rainbow-craft-kit
+    link: https://www.amazon.co.uk/s?k=tissue+paper+assorted+colours
   - item: Glue stick or PVA glue
+    link: https://www.amazon.co.uk/s?k=pva+glue+kids
   - item: Cotton wool balls
+    link: https://www.amazon.co.uk/s?k=cotton+wool+balls
   - item: Child-safe scissors
-    product: kids-rainbow-craft-kit
+    link: https://www.amazon.co.uk/s?k=child+safety+scissors
   - item: Free rainbow colouring sheet (below)
 steps:
   - title: Cut the plate in half

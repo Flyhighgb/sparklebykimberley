@@ -13,12 +13,14 @@ heroAlt: A long green and yellow paper chain caterpillar with googly eyes and pi
 publishDate: 2026-09-14
 materials:
   - item: Coloured paper or card
-    product: kids-caterpillar-craft-kit
+    link: https://www.amazon.co.uk/s?k=coloured+card+a4+craft
   - item: Child-safe scissors
+    link: https://www.amazon.co.uk/s?k=child+safety+scissors
   - item: Glue stick or sticky tape
   - item: Googly eyes
-    product: kids-caterpillar-craft-kit
+    link: https://www.amazon.co.uk/s?k=googly+eyes+self+adhesive
   - item: A pipe cleaner for antennae
+    link: https://www.amazon.co.uk/s?k=pipe+cleaners
   - item: Free caterpillar head template (below)
 steps:
   - title: Cut the strips

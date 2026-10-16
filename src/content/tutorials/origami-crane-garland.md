@@ -13,11 +13,15 @@ heroAlt: A garland of rainbow-coloured origami cranes hanging in a sunny window
 publishDate: 2026-09-20
 materials:
   - item: 15cm square origami paper, about 20 sheets
-    product: origami-paper-rainbow-pack
+    link: https://www.amazon.co.uk/s?k=origami+paper+15cm
   - item: Strong thread or fishing line
+    link: https://www.amazon.co.uk/s?k=clear+beading+thread
   - item: Large-eyed needle
+    link: https://www.amazon.co.uk/s?k=large+eye+needles
   - item: Small wooden or glass beads
+    link: https://www.amazon.co.uk/s?k=small+wooden+beads+craft
   - item: Bone folder or the back of a spoon for crisp creases
+    link: https://www.amazon.co.uk/s?k=bone+folder
 steps:
   - title: Make a square base
     text: Fold your square in half both ways, then diagonally both ways. Push the sides in along the creases so it collapses into a smaller square with the open end at the bottom.

@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import TutorialCard from '../../components/TutorialCard.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
-import { getTutorials, getProducts, audienceLabel, timeLabel, isoDuration, sellsOnEtsy, settings } from '../../lib/content';
+import { getTutorials, getProducts, affiliateLink, audienceLabel, timeLabel, isoDuration, sellsOnEtsy, settings } from '../../lib/content';
 
 export async function getStaticPaths() {
   const tutorials = await getTutorials();
@@ -112,13 +112,16 @@ const breadcrumbs = {
               return (
                 <li>
                   <span class="tick" aria-hidden="true">✦</span> {m.item}
-                  {p ? <> · <a href={`/shop/${p.id}`}>get it in the shop</a></> : m.link && <> · <a href={m.link} target="_blank" rel="sponsored noopener">buy it here</a> <small>(ad)</small></>}
+                  {p ? <> · <a href={`/shop/${p.id}`}>get it in the shop</a></> : m.link && (() => {
+                    const l = affiliateLink(m.link);
+                    return <> · <a href={l.href} target="_blank" rel="sponsored noopener">{l.amazon ? 'find it on Amazon' : 'buy it here'}</a> <small>(ad)</small></>;
+                  })()}
                 </li>
               );
             })}
           </ul>
           {d.materials.some((m) => m.link && !m.product) && (
-            <p class="small">Links marked (ad) are affiliate links: we may earn a small commission at no extra cost to you. <a href="/affiliate-disclosure">Find out more</a>.</p>
+            <p class="small">Links marked (ad) are affiliate links: we may earn a small commission at no extra cost to you. As an Amazon Associate we earn from qualifying purchases. <a href="/affiliate-disclosure">Find out more</a>.</p>
           )}
         </section>
 

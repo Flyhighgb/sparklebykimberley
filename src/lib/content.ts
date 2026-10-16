@@ -29,6 +29,18 @@ export function shopCategories(products: Product[]): string[] {
   return [...CATEGORIES.filter((c) => used.has(c)), ...[...used].filter((c) => !(CATEGORIES as readonly string[]).includes(c)).sort()];
 }
 
+/** Adds the Amazon Associates tag to Amazon links, so plain Amazon links can be pasted into the CMS. */
+export function affiliateLink(url: string): { href: string; amazon: boolean } {
+  try {
+    const u = new URL(url);
+    const amazon = /(^|\.)amazon\.co\.uk$/.test(u.hostname);
+    if (amazon && settings.amazonTag) u.searchParams.set('tag', settings.amazonTag);
+    return { href: u.toString(), amazon };
+  } catch {
+    return { href: url, amazon: false };
+  }
+}
+
 export function gbp(amount: number): string {
   return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(amount);
 }
