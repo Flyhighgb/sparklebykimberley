@@ -25,23 +25,18 @@ materials:
 steps:
   - title: Cut the strips
     text: Cut paper into strips about 2cm wide and 15cm long. You'll need about 12 strips. Older children can measure and cut their own.
-    image: /images/tutorials/paper-chain-caterpillar/step-1.jpg
     alt: Strips of green and yellow paper cut ready for a paper chain
   - title: Make the first loop
     text: Curl one strip into a ring and glue or tape the ends together.
-    image: /images/tutorials/paper-chain-caterpillar/step-2.jpg
     alt: A single paper ring held together with tape
   - title: Link the chain
     text: Thread the next strip through the ring and close it into a loop. Keep going! Try a pattern like green, yellow, green, yellow.
-    image: /images/tutorials/paper-chain-caterpillar/step-3.jpg
     alt: Paper rings linked together into a chain
   - title: Make a happy face
     text: Colour and cut out the head from the template. Stick on googly eyes and draw a big smile.
-    image: /images/tutorials/paper-chain-caterpillar/step-4.jpg
     alt: A paper caterpillar face with googly eyes and a smile
   - title: Add antennae
     text: A grown-up cuts a pipe cleaner in half. Tape the pieces to the back of the head and curl the ends. Stick the head to the first ring and your caterpillar is ready to wiggle!
-    image: /images/tutorials/paper-chain-caterpillar/step-5.jpg
     alt: Finished caterpillar with curly pipe cleaner antennae
 printable:
   file: /printables/caterpillar-head-template.pdf

@@ -24,27 +24,21 @@ materials:
 steps:
   - title: Print and fold
     text: Print the free template onto your inner card. Fold it in half along the middle line with the printed side on the outside.
-    image: /images/tutorials/pop-up-birthday-card/step-1.jpg
     alt: Printed pop-up template folded in half
   - title: Cut the tabs
     text: Cut along the three pairs of solid lines through both layers. Don't cut the dotted lines. Those are for folding.
-    image: /images/tutorials/pop-up-birthday-card/step-2.jpg
     alt: Scissors cutting pairs of slits into folded card
   - title: Push the tabs through
     text: Fold each tab back and forth along the dotted line to make a crisp crease. Open the card, then push each tab through to the inside so it stands up like a step.
-    image: /images/tutorials/pop-up-birthday-card/step-3.jpg
     alt: Three stepped tabs popping up inside an open card
   - title: Decorate the cake layers
     text: Cut three rectangles of patterned paper, one for each tier. Add icing drips with a white pen, then glue each one onto the front of a tab.
-    image: /images/tutorials/pop-up-birthday-card/step-4.jpg
     alt: Patterned paper cake tiers glued onto the pop-up tabs
   - title: Add candles and sparkle
     text: Cut thin strips for candles with tiny yellow flames on top and glue them to the top tier. A few stars or sequins around the cake look lovely.
-    image: /images/tutorials/pop-up-birthday-card/step-5.jpg
     alt: Paper candles on top of the pop-up cake
   - title: Glue into the outer card
     text: Fold your outer card in half. Glue the back of the pop-up insert inside it, keeping glue away from the tabs. Close it, press flat and leave to dry.
-    image: /images/tutorials/pop-up-birthday-card/step-6.jpg
     alt: The pop-up insert being glued inside a pink outer card
 printable:
   file: /printables/pop-up-cake-template.pdf

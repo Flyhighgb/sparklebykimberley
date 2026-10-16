@@ -26,31 +26,24 @@ materials:
 steps:
   - title: Plan your bunch
     text: Lightly pencil three or four curved stems on the front of your card. Keep them loose and wavy. Real flowers never grow in straight lines!
-    image: /images/tutorials/quilled-flower-greetings-card/step-1.jpg
     alt: Pencil sketch of curved flower stems on a card blank
   - title: Roll your first coil
     text: Slide the end of a strip into the slot of your tool and turn it slowly, keeping the edges level. Roll right to the end, slip it off and let it relax into a loose coil.
-    image: /images/tutorials/quilled-flower-greetings-card/step-2.jpg
     alt: A pink paper strip being rolled on a slotted quilling tool
   - title: Glue and pinch into petals
     text: Dab a tiny bit of glue on the loose end and hold for a few seconds. Now pinch one side to make a teardrop, or both sides for an eye shape. Make five or six petals per flower.
-    image: /images/tutorials/quilled-flower-greetings-card/step-3.jpg
     alt: Teardrop and eye-shaped quilled petals on a craft mat
   - title: Make tight centres
     text: Roll a yellow strip tightly and glue it without letting it relax. These little buttons sit in the middle of each flower.
-    image: /images/tutorials/quilled-flower-greetings-card/step-4.jpg
     alt: Small tight yellow coils for flower centres
   - title: Glue the stems
     text: Stand a green strip on its edge along your pencil line, dotting glue underneath as you go. Tweezers make this much easier.
-    image: /images/tutorials/quilled-flower-greetings-card/step-5.jpg
     alt: Green paper strips glued on edge as flower stems
   - title: Arrange your flowers
     text: Glue a centre at the top of each stem, then tuck the petals around it with their points facing in. Add a few green teardrops as leaves.
-    image: /images/tutorials/quilled-flower-greetings-card/step-6.jpg
     alt: Finished quilled flowers on a card with leaves and stems
   - title: Finish with a message
     text: Let the glue dry flat for an hour, then write your message inside. Pop it in the envelope with a little bit of tissue to protect the flowers.
-    image: /images/tutorials/quilled-flower-greetings-card/step-7.jpg
     alt: The finished card standing up next to its envelope
 tips:
   - Less glue is more. A dot on the end of a cocktail stick is plenty.

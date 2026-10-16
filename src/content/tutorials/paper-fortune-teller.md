@@ -20,23 +20,18 @@ materials:
 steps:
   - title: Start with a square
     text: Print the template, or fold an A4 sheet corner to corner and cut off the extra strip to make a square.
-    image: /images/tutorials/paper-fortune-teller/step-1.jpg
     alt: A square of paper with diagonal fold lines
   - title: Fold the corners in
     text: Fold the square in half both ways diagonally and open it again. Fold all four corners into the middle so they meet.
-    image: /images/tutorials/paper-fortune-teller/step-2.jpg
     alt: Four corners folded into the centre of the square
   - title: Turn over and repeat
     text: Flip it over and fold the four new corners into the middle again. It's getting smaller!
-    image: /images/tutorials/paper-fortune-teller/step-3.jpg
     alt: Smaller square with corners folded in a second time
   - title: Write your fortunes
     text: On the triangles, write numbers. Under each flap, write a fortune like "You'll find treasure today" or "Do your best dance move". On the outside squares, colour four different colours.
-    image: /images/tutorials/paper-fortune-teller/step-4.jpg
     alt: Hand-written fortunes and numbers inside the folded paper
   - title: Pop it open
     text: Fold it in half, then slide your thumbs and first fingers under the four outside flaps and push them together into a point. Now you're ready to play!
-    image: /images/tutorials/paper-fortune-teller/step-5.jpg
     alt: Fingers inside a finished fortune teller ready to play
 printable:
   file: /printables/fortune-teller-template.pdf

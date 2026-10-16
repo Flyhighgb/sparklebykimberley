@@ -26,23 +26,18 @@ materials:
 steps:
   - title: Cut the plate in half
     text: A grown-up cuts the paper plate in half. Each half makes one rainbow, so there's one for a friend too!
-    image: /images/tutorials/paper-plate-rainbow/step-1.jpg
     alt: A paper plate cut neatly in half
   - title: Draw the stripes
     text: Draw curvy lines across the plate to make six stripes. They don't need to be neat.
-    image: /images/tutorials/paper-plate-rainbow/step-2.jpg
     alt: Pencil stripes drawn on a half paper plate
   - title: Scrunch the tissue
     text: Tear tissue paper into small squares and scrunch each one into a little ball. This is the best bit, so take your time!
-    image: /images/tutorials/paper-plate-rainbow/step-3.jpg
     alt: Small hands scrunching coloured tissue paper into balls
   - title: Stick the colours
     text: Spread glue on one stripe at a time and press the tissue balls on. Red on the outside, then orange, yellow, green, blue and purple.
-    image: /images/tutorials/paper-plate-rainbow/step-4.jpg
     alt: Tissue balls glued in rainbow order on the plate
   - title: Add fluffy clouds
     text: Pull the cotton wool apart so it's fluffy, then glue a cloud at each end of the rainbow.
-    image: /images/tutorials/paper-plate-rainbow/step-5.jpg
     alt: Finished rainbow with fluffy white clouds at each end
 printable:
   file: /printables/rainbow-colouring-sheet.pdf
