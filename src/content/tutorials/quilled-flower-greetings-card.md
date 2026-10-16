@@ -13,13 +13,15 @@ heroAlt: A white greetings card decorated with pink, yellow and turquoise quille
 publishDate: 2026-10-01
 materials:
   - item: Quilling paper strips, 3mm or 5mm wide, in 3 or 4 colours
-    product: quilling-starter-kit
+    link: https://www.amazon.co.uk/s?k=quilling+paper+strips
   - item: Slotted quilling tool (or a cocktail stick)
-    product: quilling-starter-kit
+    link: https://www.amazon.co.uk/s?k=slotted+quilling+tool
   - item: A5 card blank with envelope
-    product: pastel-card-blanks-pack
+    link: https://www.amazon.co.uk/s?k=a5+card+blanks+with+envelopes
   - item: PVA glue with a fine nozzle
+    link: https://www.amazon.co.uk/s?k=fine+tip+pva+glue
   - item: Tweezers (handy but not essential)
+    link: https://www.amazon.co.uk/s?k=craft+tweezers
   - item: Pencil and ruler
 steps:
   - title: Plan your bunch

@@ -13,10 +13,13 @@ heroAlt: An open greetings card with a colourful three-tier pop-up birthday cake
 publishDate: 2026-09-05
 materials:
   - item: Two sheets of A4 card in contrasting colours
-    product: pastel-card-blanks-pack
+    link: https://www.amazon.co.uk/s?k=coloured+card+a4
   - item: Scraps of patterned paper for the cake layers
+    link: https://www.amazon.co.uk/s?k=patterned+paper+pad+6x6
   - item: Craft knife and cutting mat, or sharp scissors
+    link: https://www.amazon.co.uk/s?k=craft+knife+cutting+mat+set
   - item: Glue stick
+    link: https://www.amazon.co.uk/s?k=glue+stick
   - item: Free pop-up cake template (below)
 steps:
   - title: Print and fold

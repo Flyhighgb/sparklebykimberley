@@ -63,7 +63,7 @@ const tutorials = defineCollection({
     heroImage: z.string(),
     heroAlt: z.string(),
     publishDate: z.coerce.date(),
-    materials: optList(z.object({ item: z.string(), product: optStr })),
+    materials: optList(z.object({ item: z.string(), product: optStr, link: optStr })),
     steps: z
       .array(
         z.object({

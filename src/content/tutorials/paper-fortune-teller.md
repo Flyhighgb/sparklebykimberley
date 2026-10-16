@@ -13,8 +13,9 @@ heroAlt: A colourful paper fortune teller held open on small fingers
 publishDate: 2026-08-30
 materials:
   - item: One square of paper (or our free printable template)
-    product: origami-paper-rainbow-pack
+    link: https://www.amazon.co.uk/s?k=origami+paper+15cm
   - item: Felt tips or colouring pencils
+    link: https://www.amazon.co.uk/s?k=felt+tip+pens+kids
   - item: Free fortune teller template (below)
 steps:
   - title: Start with a square

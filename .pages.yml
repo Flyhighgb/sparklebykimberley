@@ -58,6 +58,7 @@ content:
         fields:
           - { name: item, label: Item, type: string, required: true }
           - { name: product, label: "Shop product to link (optional: the product's file name without .json)", type: string }
+          - { name: link, label: "Affiliate link (optional). Paste any amazon.co.uk link and your Amazon tag is added automatically.", type: string }
       - name: steps
         label: Steps
         type: object
@@ -153,6 +154,7 @@ content:
     fields:
       - { name: siteName, label: Site name, type: string }
       - { name: tagline, label: Tagline, type: string }
+      - { name: amazonTag, label: "Amazon Associates tracking ID (added to every amazon.co.uk link)", type: string }
       - { name: etsyShop, label: "Etsy shop name (shop products come from here; leave blank to use the basket and Stripe instead)", type: string }
       - { name: announcement, label: Announcement bar text, type: string }
       - { name: deliveryFlatRate, label: "Delivery charge in £ (must match Stripe)", type: number }
