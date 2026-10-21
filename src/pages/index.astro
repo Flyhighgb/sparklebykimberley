@@ -37,7 +37,7 @@ const orgSchema = {
         </div>
       </div>
       <div class="hero-art" aria-hidden="true">
-        <img src="/images/site/hero.jpg" alt="" width="900" height="760" fetchpriority="high" />
+        <img src={settings.photos.hero} alt="" width="900" height="760" fetchpriority="high" />
         <span class="spark s1">✦</span><span class="spark s2">★</span><span class="spark s3">✦</span>
       </div>
     </div>
@@ -47,11 +47,11 @@ const orgSchema = {
   <section class="section section--white">
     <div class="container tiles">
       <a class="tile tile--adults sparkle-hover" href="/tutorials?audience=adults">
-        <img src="/images/site/tile-adults.jpg" alt="" width="800" height="600" loading="lazy" />
+        <img src={settings.photos.tileAdults} alt="" width="800" height="600" loading="lazy" />
         <span class="tile-text"><span class="script">for you</span><strong>Crafts for Grown-Ups</strong><span>Quilling, origami, pop-up cards and more. A little bit of calm, just for you.</span></span>
       </a>
       <a class="tile tile--kids sparkle-hover" href="/kids-corner">
-        <img src="/images/site/tile-kids.jpg" alt="" width="800" height="600" loading="lazy" />
+        <img src={settings.photos.tileKids} alt="" width="800" height="600" loading="lazy" />
         <span class="tile-text"><span class="script">for them</span><strong>Crafts for Little Hands</strong><span>Easy, mess-friendly makes with big results and free printables.</span></span>
       </a>
     </div>
@@ -99,7 +99,7 @@ const orgSchema = {
 
   <section class="section">
     <div class="container hello-box">
-      <img src="/images/site/kimberley.jpg" alt="Kimberley smiling at her craft table surrounded by colourful paper" width="600" height="600" loading="lazy" />
+      <img src={settings.photos.kimberley} alt={settings.photos.kimberleyAlt} width="600" height="600" loading="lazy" />
       <div>
         <span class="script eyebrow">Hello, I'm Kimberley!</span>
         <h2>Welcome to my happy place</h2>

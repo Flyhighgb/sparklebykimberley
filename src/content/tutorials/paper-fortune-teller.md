@@ -9,7 +9,7 @@ cost: Free
 occasions: [rainy day, back to school, birthdays, any time]
 techniques: [origami]
 heroImage: /images/tutorials/paper-fortune-teller/hero.jpg
-heroAlt: A colourful paper fortune teller held open on small fingers
+heroAlt: Illustration of a pink, turquoise, blue and yellow paper fortune teller seen from above
 publishDate: 2026-08-30
 materials:
   - item: One square of paper (or our free printable template)
@@ -21,23 +21,23 @@ steps:
   - title: Start with a square
     text: Print the template, or fold an A4 sheet corner to corner and cut off the extra strip to make a square.
     image: /images/tutorials/paper-fortune-teller/step-1.jpg
-    alt: A square of paper with diagonal fold lines
+    alt: Diagram of a square of paper with dashed diagonal fold lines
   - title: Fold the corners in
     text: Fold the square in half both ways diagonally and open it again. Fold all four corners into the middle so they meet.
     image: /images/tutorials/paper-fortune-teller/step-2.jpg
-    alt: Four corners folded into the centre of the square
+    alt: Diagram of the four corners folded into the centre of the square
   - title: Turn over and repeat
     text: Flip it over and fold the four new corners into the middle again. It's getting smaller!
     image: /images/tutorials/paper-fortune-teller/step-3.jpg
-    alt: Smaller square with corners folded in a second time
+    alt: Diagram of the smaller square, with arrows showing it being turned over
   - title: Write your fortunes
     text: On the triangles, write numbers. Under each flap, write a fortune like "You'll find treasure today" or "Do your best dance move". On the outside squares, colour four different colours.
     image: /images/tutorials/paper-fortune-teller/step-4.jpg
-    alt: Hand-written fortunes and numbers inside the folded paper
+    alt: Illustration of numbers written on the inside triangles, with one flap lifted to show a fortune
   - title: Pop it open
     text: Fold it in half, then slide your thumbs and first fingers under the four outside flaps and push them together into a point. Now you're ready to play!
     image: /images/tutorials/paper-fortune-teller/step-5.jpg
-    alt: Fingers inside a finished fortune teller ready to play
+    alt: Illustration of a finished fortune teller, with arrows showing how it opens and closes
 printable:
   file: /printables/fortune-teller-template.pdf
   label: Fortune teller template (A4 PDF)

@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Newsletter from '../components/Newsletter.astro';
+import { settings } from '../lib/content';
 ---
 <Base title="About Kimberley" description="Meet Kimberley, the paper-loving crafter behind Sparkle by Kimberley, and find out why she started sharing free craft tutorials.">
   <section class="page-hero confetti">
@@ -10,13 +11,13 @@ import Newsletter from '../components/Newsletter.astro';
     </div>
   </section>
   <section class="container about">
-    <img src="/images/site/kimberley.jpg" alt="Kimberley at her craft table holding a paper flower" width="600" height="600" loading="lazy" />
+    <img src={settings.photos.kimberley} alt={settings.photos.kimberleyAlt} width="600" height="600" loading="lazy" />
     <div class="prose">
       <p>I've loved paper for as long as I can remember. As a little girl I folded fortune tellers at the kitchen table, and I've never really stopped! These days my craft room is a happy explosion of card, glitter and half-finished projects.</p>
       <p>I started Sparkle by Kimberley because I kept hearing the same thing from friends: "I'd love to try that, but I'm not crafty." Here's my secret: <strong>nobody is born crafty.</strong> You just need simple steps, the right bits and permission to make a mess.</p>
       <h2>What you'll find here</h2>
       <ul>
-        <li><strong>Free tutorials</strong> with clear photos for every step, whether it's a calm grown-up project or a rainy-day rescue for the kids.</li>
+        <li><strong>Free tutorials</strong> with clear pictures for every step, whether it's a calm grown-up project or a rainy-day rescue for the kids.</li>
         <li><strong>Free printables</strong> for colouring, templates and classroom activities.</li>
         <li><strong>A little shop</strong> of kits and supplies I've chosen because they work well with my tutorials.</li>
       </ul>

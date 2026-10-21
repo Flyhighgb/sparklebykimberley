@@ -168,6 +168,15 @@ content:
           - { name: title, label: Title, type: string }
           - { name: text, label: Text, type: text }
           - { name: tutorials, label: "Tutorials to show (file names without .md)", type: string, list: true }
+      - name: photos
+        label: Home and About page photos
+        type: object
+        fields:
+          - { name: hero, label: "Home page main picture (any shape, shown in a round frame)", type: image }
+          - { name: tileAdults, label: "Home page 'Crafts for Grown-Ups' picture", type: image }
+          - { name: tileKids, label: "Home page 'Crafts for Little Hands' picture", type: image }
+          - { name: kimberley, label: "Photo of Kimberley (square works best, shown in a circle)", type: image }
+          - { name: kimberleyAlt, label: "Photo of Kimberley description (for blind visitors and Google)", type: string }
       - name: social
         label: Social links
         type: object
