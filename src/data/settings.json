@@ -17,6 +17,13 @@
       "origami-crane-garland"
     ]
   },
+  "photos": {
+    "hero": "/images/site/hero.jpg",
+    "tileAdults": "/images/site/tile-adults.jpg",
+    "tileKids": "/images/site/tile-kids.jpg",
+    "kimberley": "/images/site/kimberley.jpg",
+    "kimberleyAlt": "Illustration of Kimberley's craft table with coloured card, a quilled flower, a paper crane, scissors and washi tape"
+  },
   "social": [
     {
       "name": "Instagram",
