@@ -11,3 +11,4 @@ worker/node_modules/
 .cj-token.json
 # Generated from Etsy on every build
 src/content/products/etsy/
+printables-out/
