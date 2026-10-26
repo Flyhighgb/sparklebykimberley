@@ -21,6 +21,41 @@ const etsy = d.fulfilment === 'etsy';
 const etsyLink = d.etsyUrl || etsyShopUrl;
 const variants = d.variants.map((v) => ({ name: v.name, price: v.price ?? d.price }));
 const site = 'https://sparklebykimberley.co.uk';
+// Postage and returns for Google come straight from the Etsy listing, so they always match what
+// buyers see at checkout. Digital downloads arrive straight away with no postage.
+const dayRange = (min?: number | null, max?: number | null) =>
+  typeof min === 'number' || typeof max === 'number'
+    ? { '@type': 'QuantitativeValue', minValue: min ?? max, maxValue: max ?? min, unitCode: 'DAY' }
+    : undefined;
+const destinations = d.digital
+  ? [{ country: 'GB', cost: 0, currency: 'GBP', minDays: 0, maxDays: 0 }]
+  : (d.shipping?.destinations ?? []);
+const handling = d.digital ? dayRange(0, 0) : dayRange(d.shipping?.handlingMin, d.shipping?.handlingMax);
+const shippingDetails = destinations.map((s) => {
+  const transit = dayRange(s.minDays, s.maxDays);
+  return {
+    '@type': 'OfferShippingDetails',
+    shippingRate: { '@type': 'MonetaryAmount', value: s.cost.toFixed(2), currency: s.currency },
+    shippingDestination: { '@type': 'DefinedRegion', addressCountry: s.country },
+    ...(handling && transit ? { deliveryTime: { '@type': 'ShippingDeliveryTime', handlingTime: handling, transitTime: transit } } : {}),
+  };
+});
+const returnCountries = [...new Set(['GB', ...destinations.map((s) => s.country)])];
+const returnPolicy = d.returns
+  ? d.returns.accepted && d.returns.days
+    ? {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: returnCountries,
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: d.returns.days,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        // Etsy's standard policy: buyers pay to post returns back.
+        returnFees: 'https://schema.org/ReturnShippingFees',
+      }
+    : d.returns.accepted
+      ? undefined
+      : { '@type': 'MerchantReturnPolicy', applicableCountry: returnCountries, returnPolicyCategory: 'https://schema.org/MerchantReturnNotPermitted' }
+  : undefined;
 const productSchema = {
   '@context': 'https://schema.org',
   '@type': 'Product',
@@ -36,7 +71,10 @@ const productSchema = {
     price: d.price.toFixed(2),
     availability: 'https://schema.org/InStock',
     ...(etsy
-      ? {}
+      ? {
+          ...(shippingDetails.length ? { shippingDetails } : {}),
+          ...(returnPolicy ? { hasMerchantReturnPolicy: returnPolicy } : {}),
+        }
       : {
           shippingDetails: {
             '@type': 'OfferShippingDetails',

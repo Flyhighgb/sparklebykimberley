@@ -130,6 +130,18 @@ const products = defineCollection({
     safetyNote: optStr,
     featured: z.boolean().nullish().transform(Boolean),
     boughtTogether: optList(z.string()),
+    // Filled in from Etsy by the import, for the product's search listing details.
+    digital: z.boolean().nullish().transform(Boolean),
+    shipping: z
+      .object({
+        handlingMin: z.number().nullish(),
+        handlingMax: z.number().nullish(),
+        destinations: z.array(
+          z.object({ country: z.string(), cost: z.number(), currency: z.string(), minDays: z.number().nullish(), maxDays: z.number().nullish() }),
+        ),
+      })
+      .nullish(),
+    returns: z.object({ accepted: z.boolean(), days: z.number().nullish() }).nullish(),
     draft: z.boolean().nullish().transform(Boolean),
   }),
 });

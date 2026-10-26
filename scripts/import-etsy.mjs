@@ -57,6 +57,34 @@ function summarise(text, title) {
   return first.length > 160 ? first.slice(0, 157).replace(/\s+\S*$/, '') + '…' : first;
 }
 
+const money = (m) => (m && m.divisor ? m.amount / m.divisor : null);
+const days = (n) => (typeof n === 'number' && n >= 0 ? n : null);
+
+/** Etsy postage to each named country (not "everywhere else", which Google can't take). */
+function shippingFor(profile, listing) {
+  if (!profile) return null;
+  const destinations = (profile.shipping_profile_destinations || [])
+    .filter((d) => d.destination_country_iso && money(d.primary_cost) !== null)
+    .map((d) => ({
+      country: d.destination_country_iso.toUpperCase(),
+      cost: money(d.primary_cost),
+      currency: d.primary_cost.currency_code || 'GBP',
+      minDays: days(d.min_delivery_days),
+      maxDays: days(d.max_delivery_days),
+    }));
+  if (!destinations.length) return null;
+  return {
+    handlingMin: days(listing.processing_min ?? profile.min_processing_days),
+    handlingMax: days(listing.processing_max ?? profile.max_processing_days),
+    destinations,
+  };
+}
+
+function returnsFor(policy) {
+  if (!policy) return null;
+  return { accepted: Boolean(policy.accepts_returns), days: days(policy.return_deadline) };
+}
+
 function slug(s) {
   return s.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60).replace(/-$/, '');
 }
@@ -82,11 +110,28 @@ try {
     if (!page.results?.length || listings.length >= page.count) break;
   }
   const images = new Map();
+  const shippingProfiles = new Map();
   for (let i = 0; i < listings.length; i += 100) {
     const ids = listings.slice(i, i + 100).map((l) => l.listing_id).join(',');
-    const batch = await etsy(`/listings/batch?listing_ids=${ids}&includes=Images`);
-    for (const l of batch.results || []) images.set(l.listing_id, l.images || []);
+    // Postage is a nice extra: if Etsy won't send it, carry on with just the photos.
+    const batch = await etsy(`/listings/batch?listing_ids=${ids}&includes=Images,Shipping`).catch((e) => {
+      console.log(`::warning::Couldn't read Etsy postage details: ${e.message}`);
+      return etsy(`/listings/batch?listing_ids=${ids}&includes=Images`);
+    });
+    for (const l of batch.results || []) {
+      images.set(l.listing_id, l.images || []);
+      if (l.shipping_profile) shippingProfiles.set(l.listing_id, l.shipping_profile);
+    }
   }
+
+  // The shop's return policies, so product pages can tell Google what Etsy tells buyers.
+  const returnPolicies = new Map();
+  try {
+    for (const r of (await etsy(`/shops/${shop.shop_id}/policies/return`)).results || []) returnPolicies.set(r.return_policy_id, r);
+  } catch (e) {
+    console.log(`::warning::Couldn't read the Etsy return policies, so product pages won't list them: ${e.message}`);
+  }
+  if (!shippingProfiles.size) console.log('::warning::Etsy sent no postage details, so product pages won\'t list them.');
 
   await rm(OUT, { recursive: true, force: true });
   await mkdir(OUT, { recursive: true });
@@ -113,6 +158,9 @@ try {
       etsyUrl: (l.url || `https://www.etsy.com/uk/listing/${l.listing_id}`).split('?')[0],
       images: pics.slice(0, 6),
       featured: typeof l.featured_rank === 'number' && l.featured_rank >= 0,
+      digital: l.listing_type === 'download' || l.type === 'download' || l.is_digital === true,
+      shipping: shippingFor(shippingProfiles.get(l.listing_id), l),
+      returns: returnsFor(returnPolicies.get(l.return_policy_id)),
     };
     await writeFile(join(OUT, `${id}.json`), JSON.stringify(product, null, 2) + '\n');
     written++;
