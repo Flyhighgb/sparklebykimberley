@@ -21,16 +21,20 @@ const etsy = d.fulfilment === 'etsy';
 const etsyLink = d.etsyUrl || etsyShopUrl;
 const variants = d.variants.map((v) => ({ name: v.name, price: v.price ?? d.price }));
 const site = 'https://sparklebykimberley.co.uk';
-// Postage and returns for Google come straight from the Etsy listing, so they always match what
-// buyers see at checkout. Digital downloads arrive straight away with no postage.
+// Postage and returns for Google. Returns come straight from the Etsy listing. Etsy only shares
+// postage with apps that sign in to the shop, so UK postage comes from Site settings instead.
+// Digital downloads arrive straight away with no postage.
 const dayRange = (min?: number | null, max?: number | null) =>
   typeof min === 'number' || typeof max === 'number'
     ? { '@type': 'QuantitativeValue', minValue: min ?? max, maxValue: max ?? min, unitCode: 'DAY' }
     : undefined;
+const postage = settings.etsyPostage as Partial<Record<'ukCost' | 'dispatchMinDays' | 'dispatchMaxDays' | 'deliveryMinDays' | 'deliveryMaxDays', number | null>>;
 const destinations = d.digital
   ? [{ country: 'GB', cost: 0, currency: 'GBP', minDays: 0, maxDays: 0 }]
-  : (d.shipping?.destinations ?? []);
-const handling = d.digital ? dayRange(0, 0) : dayRange(d.shipping?.handlingMin, d.shipping?.handlingMax);
+  : typeof postage?.ukCost === 'number'
+    ? [{ country: 'GB', cost: postage.ukCost, currency: 'GBP', minDays: postage.deliveryMinDays, maxDays: postage.deliveryMaxDays }]
+    : [];
+const handling = d.digital ? dayRange(0, 0) : dayRange(postage?.dispatchMinDays, postage?.dispatchMaxDays);
 const shippingDetails = destinations.map((s) => {
   const transit = dayRange(s.minDays, s.maxDays);
   return {
