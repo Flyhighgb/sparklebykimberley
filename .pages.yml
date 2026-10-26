@@ -156,6 +156,15 @@ content:
       - { name: tagline, label: Tagline, type: string }
       - { name: amazonTag, label: "Amazon Associates tracking ID (added to every amazon.co.uk link)", type: string }
       - { name: etsyShop, label: "Etsy shop name (shop products come from here; leave blank to use the basket and Stripe instead)", type: string }
+      - name: etsyPostage
+        label: "Etsy UK postage (copy from your Etsy shipping profile; Google shows it in search results)"
+        type: object
+        fields:
+          - { name: ukCost, label: "UK postage in £ (0 for free postage; leave blank to leave it out)", type: number }
+          - { name: dispatchMinDays, label: "Dispatch time: fewest working days", type: number }
+          - { name: dispatchMaxDays, label: "Dispatch time: most working days", type: number }
+          - { name: deliveryMinDays, label: "Delivery time once posted: fewest days", type: number }
+          - { name: deliveryMaxDays, label: "Delivery time once posted: most days", type: number }
       - { name: announcement, label: Announcement bar text, type: string }
       - { name: deliveryFlatRate, label: "Delivery charge in £ (must match Stripe)", type: number }
       - { name: freeDeliveryThreshold, label: "Free delivery over £ (must match the Worker setting)", type: number }

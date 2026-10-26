@@ -2,6 +2,13 @@
   "siteName": "Sparkle by Kimberley",
   "tagline": "Crafting colourful moments that sparkle all year round",
   "etsyShop": "SparkleByKimberley",
+  "etsyPostage": {
+    "ukCost": null,
+    "dispatchMinDays": null,
+    "dispatchMaxDays": null,
+    "deliveryMinDays": null,
+    "deliveryMaxDays": null
+  },
   "amazonTag": "sparklebykimberley-21",
   "announcement": "Visit our shop on Etsy",
   "deliveryFlatRate": 3.49,
